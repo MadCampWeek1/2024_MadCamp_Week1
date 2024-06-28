@@ -13,6 +13,8 @@ class Tab2Fragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_contact, container, false)
+        return inflater.inflate(R.layout.fragment_contact_list, container, false)
     }
 }
+
+data class Contact(val name: String, val phone: String, var isPendingDelete: Boolean = false)
