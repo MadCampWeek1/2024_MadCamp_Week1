@@ -8,12 +8,22 @@
         android:id="@+id/homeFragment"
         android:name="com.example.madcamp_week1.HomeFragment"
         android:label="Home"
-        tools:layout="@layout/fragment_images" />
+        tools:layout="@layout/fragment_images" >
+        <action
+            android:id="@+id/action_homeFragment_to_themeDetailFragment"
+            app:destination="@id/themeDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/themeDetailFragment"
+        android:name="com.example.madcamp_week1.ThemeDetailFragment"
+        android:label="Theme Detail"
+        tools:layout="@layout/fragment_theme_detail" />
+
     <fragment
         android:id="@+id/dashboardFragment"
-        android:name="com.example.madcamp_week1.HomeFragment"
+        android:name="com.example.madcamp_week1.Tab2Fragment"
         android:label="Dashboard"
-        tools:layout="@layout/fragment_images" />
+        tools:layout="@layout/fragment_contact" />
     <fragment
         android:id="@+id/notificationsFragment"
         android:name="com.example.madcamp_week1.HomeFragment"

@@ -2,7 +2,8 @@
     <item
         android:id="@+id/homeFragment"
         android:icon="@drawable/ic_image"
-        android:title="Gallery" />
+        android:title="Gallery"
+        android:checkable="true" />
     <item
         android:id="@+id/dashboardFragment"
         android:icon="@drawable/ic_people"
