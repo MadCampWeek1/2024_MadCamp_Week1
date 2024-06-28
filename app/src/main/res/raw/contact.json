@@ -1,10 +1,10 @@
 [
-  {"name": "John Doe", "phone": "123-456-7890"},
-  {"name": "Jane Smith", "phone": "987-654-3210"},
-  {"name": "John Doe", "phone": "123-456-7890"},
-  {"name": "Jane Smith", "phone": "987-654-3210"},
-  {"name": "John Doe", "phone": "123-456-7890"},
-  {"name": "Jane Smith", "phone": "987-654-3210"},
-  {"name": "John Doe", "phone": "123-456-7890"},
-  {"name": "Jane Smith", "phone": "987-654-3210"}
+  {"name": "John Doe", "phone": "123-456-7890", "writing": ["writing is best", "I'm the best.", "I love pizza."]},
+  {"name": "Jane Smith", "phone": "987-654-3210", "writing":  ["what a beautiful day", "Here we go!", "I love it!", "dog dog dog"]},
+  {"name": "John Doe", "phone": "123-456-7890", "writing":  ["head", "shoulder"]},
+  {"name": "Jane Smith", "phone": "987-654-3210", "writing":  ["dog", "cat", "bird", "fish"]},
+  {"name": "John Doe", "phone": "123-456-7890", "writing":  ["shake my hands"]},
+  {"name": "Jane Smith", "phone": "987-654-3210", "writing":  ["hello"]},
+  {"name": "John Doe", "phone": "123-456-7890", "writing":  ["say hi"]},
+  {"name": "Jane Smith", "phone": "987-654-3210", "writing":  ["abcdef", "ghij"]}
 ]

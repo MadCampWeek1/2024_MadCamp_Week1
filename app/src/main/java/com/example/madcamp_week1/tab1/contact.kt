@@ -17,4 +17,6 @@ class Tab2Fragment : Fragment() {
     }
 }
 
-data class Contact(val name: String, val phone: String, var isPendingDelete: Boolean = false)
+data class Contact(val name: String, val phone: String, var isPendingDelete: Boolean = false) {
+    val writing: List<String> = TODO()
+}
