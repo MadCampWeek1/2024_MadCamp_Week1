@@ -26,7 +26,7 @@
         tools:layout="@layout/fragment_contact_list" />
     <fragment
         android:id="@+id/notificationsFragment"
-        android:name="com.example.madcamp_week1.HomeFragment"
+        android:name="com.example.madcamp_week1.Tab3Fragment"
         android:label="Notifications"
         tools:layout="@layout/fragment_images" />
 </navigation>

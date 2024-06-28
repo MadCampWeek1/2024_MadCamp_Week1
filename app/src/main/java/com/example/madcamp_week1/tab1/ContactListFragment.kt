@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
+//import com.google.gson.reflect.TypeToken
 import java.io.BufferedReader
 import java.io.InputStreamReader
 class ContactListFragment : Fragment() {
@@ -134,7 +134,7 @@ class ContactListFragment : Fragment() {
             val inputStream = resources.openRawResource(R.raw.contact)
             val reader = BufferedReader(InputStreamReader(inputStream))
             val gson = Gson()
-            val contactType = object : TypeToken<List<Contact>>() {}.type
+            val contactType = object : com.google.gson.reflect.TypeToken<List<Contact>>() {}.type
             val contacts: List<Contact> = gson.fromJson(reader, contactType)
             Log.d("ContactListFragment", "Successfully read contacts from JSON")
             contacts

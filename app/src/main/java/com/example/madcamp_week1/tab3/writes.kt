@@ -13,6 +13,6 @@ class Tab3Fragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_images, container, false)
+        return inflater.inflate(R.layout.fragment_geul, container, false)
     }
 }
