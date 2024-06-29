@@ -14,8 +14,15 @@
         app:title="Contact"
         app:titleTextColor="@android:color/white" />
 
+    <androidx.appcompat.widget.SearchView
+        android:id="@+id/search_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:queryHint="Search by name" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view_contacts"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:paddingBottom="56dp"/>
 </LinearLayout>

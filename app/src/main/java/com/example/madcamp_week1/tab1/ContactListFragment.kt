@@ -14,9 +14,9 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
-//import com.google.gson.reflect.TypeToken
 import java.io.BufferedReader
 import java.io.InputStreamReader
+
 class ContactListFragment : Fragment() {
 
     private lateinit var contactRecyclerView: RecyclerView
@@ -39,8 +39,12 @@ class ContactListFragment : Fragment() {
         }
 
         contactRecyclerView.layoutManager = LinearLayoutManager(context)
-        contactAdapter = ContactAdapter(getContactList().toMutableList())
+        contactAdapter = ContactAdapter(requireContext(), getContactList().toMutableList())
         contactRecyclerView.adapter = contactAdapter
+
+        // 구분선 추가
+        val dividerItemDecoration = DividerItemDecoration(requireContext(), R.drawable.divider)
+        contactRecyclerView.addItemDecoration(dividerItemDecoration)
 
         Log.d("ContactListFragment", "Adapter set")
 
@@ -89,7 +93,7 @@ class ContactListFragment : Fragment() {
                             c.drawRect(
                                 itemView.left.toFloat(),
                                 itemView.top.toFloat(),
-                                itemView.left + 3*dX,
+                                itemView.left + 3 * dX,
                                 itemView.bottom.toFloat(),
                                 paint
                             )
@@ -100,7 +104,7 @@ class ContactListFragment : Fragment() {
                             val iconLeft = iconRight - icon.intrinsicWidth
                             icon.setBounds(iconLeft, iconTop, iconRight, iconBottom)
                             c.drawRect(
-                                itemView.right + 3*dX,
+                                itemView.right + 3 * dX,
                                 itemView.top.toFloat(),
                                 itemView.right.toFloat(),
                                 itemView.bottom.toFloat(),
