@@ -3,60 +3,70 @@
     "name": "John Doe",
     "phone": "123-456-7890",
     "profileImage": "https://c.files.bbci.co.uk/DCE1/production/_104454565_mary-mcgowan_caught-in-the-act_00001294.jpg",
-    "writing": ["writing is best", "I'm the best.", "I love pizza."]
+    "writing": ["writing is best", "I'm the best.", "I love pizza."],
+    "owner": true
   },
   {
     "name": "Jane Smith",
     "phone": "987-654-3210",
     "profileImage": "https://c.files.bbci.co.uk/DCE1/production/_104454565_mary-mcgowan_caught-in-the-act_00001294.jpg",
-    "writing": ["what a beautiful day", "Here we go!", "I love it!", "dog dog dog"]
+    "writing": ["what a beautiful day", "Here we go!", "I love it!", "dog dog dog"],
+    "owner": false
   },
   {
     "name": "John Doe",
     "phone": "123-456-7890",
     "profileImage": "https://c.files.bbci.co.uk/DCE1/production/_104454565_mary-mcgowan_caught-in-the-act_00001294.jpg",
-    "writing": ["head", "shoulder"]
+    "writing": ["head", "shoulder"],
+    "owner": false
   },
   {
     "name": "Jane Smith",
     "phone": "987-654-3210",
     "profileImage": "https://c.files.bbci.co.uk/DCE1/production/_104454565_mary-mcgowan_caught-in-the-act_00001294.jpg",
-    "writing": ["dog", "cat", "bird", "fish"]
+    "writing": ["dog", "cat", "bird", "fish"],
+    "owner": false
   },
   {
     "name": "John Doe",
     "phone": "123-456-7890",
     "profileImage": "https://c.files.bbci.co.uk/DCE1/production/_104454565_mary-mcgowan_caught-in-the-act_00001294.jpg",
-    "writing": ["shake my hands"]
+    "writing": ["shake my hands"],
+    "owner": false
   },
   {
     "name": "Jane Smith",
     "phone": "987-654-3210",
     "profileImage": "https://c.files.bbci.co.uk/DCE1/production/_104454565_mary-mcgowan_caught-in-the-act_00001294.jpg",
-    "writing": ["hello"]
+    "writing": ["hello"],
+    "owner": false
   },
   {
     "name": "John Doe",
     "phone": "123-456-7890",
     "profileImage": "https://c.files.bbci.co.uk/DCE1/production/_104454565_mary-mcgowan_caught-in-the-act_00001294.jpg",
-    "writing": ["say hi"]
+    "writing": ["say hi"],
+    "owner": false
   },
   {
     "name": "Jane Smith",
     "phone": "987-654-3210",
     "profileImage": "https://c.files.bbci.co.uk/DCE1/production/_104454565_mary-mcgowan_caught-in-the-act_00001294.jpg",
-    "writing": ["abcdef", "ghij"]
+    "writing": ["abcdef", "ghij"],
+    "owner": false
   },
   {
     "name": "Jane Smith",
     "phone": "987-654-3210",
     "profileImage": "https://c.files.bbci.co.uk/DCE1/production/_104454565_mary-mcgowan_caught-in-the-act_00001294.jpg",
-    "writing": ["open the window", "it's raining"]
+    "writing": ["open the window", "it's raining"],
+    "owner": false
   },
   {
     "name": "Jane Smith",
     "phone": "987-654-3210",
     "profileImage": "https://c.files.bbci.co.uk/DCE1/production/_104454565_mary-mcgowan_caught-in-the-act_00001294.jpg",
-    "writing": ["anything", "you want"]
+    "writing": ["anything", "you want"],
+    "owner": false
   }
 ]
