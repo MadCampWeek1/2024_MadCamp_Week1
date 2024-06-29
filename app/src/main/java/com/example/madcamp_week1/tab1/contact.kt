@@ -21,7 +21,11 @@ data class Contact(
     val name: String,
     val phone: String,
     val profileImage: String,
+    val gender: String,
+    val age: Int,
+    val introduction: String,
     val writing: MutableList<String> = mutableListOf(),
     var isPendingDelete: Boolean = false,
     val owner: Boolean
 )
+
