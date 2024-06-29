@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">MadCamp_Week1</string>
+    <string name="profile_icon_description">Profile Icon</string>
 </resources>
