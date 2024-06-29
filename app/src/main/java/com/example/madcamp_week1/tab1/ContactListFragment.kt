@@ -20,9 +20,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.madcamp_week1.viewmodel.ContactViewModel
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+//import com.google.gson.reflect.TypeToken
 import java.io.BufferedReader
 import java.io.InputStreamReader
-
 class ContactListFragment : Fragment() {
 
     private lateinit var contactRecyclerView: RecyclerView

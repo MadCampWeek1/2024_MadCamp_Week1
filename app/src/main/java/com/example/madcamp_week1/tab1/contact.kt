@@ -23,6 +23,9 @@ data class Contact(
     val profileImage: String,
     val writing: MutableList<Writing>,
     var isPendingDelete: Boolean = false,
-    val owner: Boolean
+    val owner: Boolean,
+    val gender: String,
+    val age: Int,
+    val introduction: String
 )
 
