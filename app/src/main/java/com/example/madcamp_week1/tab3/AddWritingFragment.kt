@@ -52,6 +52,10 @@ class AddWritingFragment : Fragment() {
             // Navigate back to the previous fragment (Tab3Fragment in this case)
             findNavController().popBackStack(R.id.notificationsFragment, false)
         }
+        binding.btnBack.setOnClickListener {
+            // Navigate back to the previous fragment (Tab3Fragment in this case)
+            findNavController().popBackStack(R.id.notificationsFragment, false)
+        }
     }
 
     private fun saveNewWriting(newWriting: String) {
@@ -80,9 +84,8 @@ class AddWritingFragment : Fragment() {
 
         // Find the contact with owner = true and add the new writing
         val ownerContact = contactList.find { it.owner }
-        ownerContact?.writing?.add(newWriting)
-        if (ownerContact != null) {
-            print(ownerContact.writing)
+        ownerContact?.let {
+            it.writing.add(Writing(newWriting, false, 0)) // Add newWriting to the writing list of the owner contact
         }
 
         // Write the updated contact list back to JSON file
