@@ -21,7 +21,10 @@
       }
     ],
     "isPendingDelete": false,
-    "owner": true
+    "owner": true,
+    "gender": "Male",
+    "age": 35,
+    "introduction": "I am the owner and I love writing and pizza."
   },
   {
     "name": "Jane Smith",
@@ -51,7 +54,10 @@
       }
     ],
     "isPendingDelete": false,
-    "owner": false
+    "owner": false,
+    "gender": "Female",
+    "age": 28,
+    "introduction": "I enjoy beautiful days and love animals."
   },
   {
     "name": "John Doe",
@@ -71,7 +77,10 @@
       }
     ],
     "isPendingDelete": false,
-    "owner": false
+    "owner": false,
+    "gender": "Male",
+    "age": 30,
+    "introduction": "Just a regular guy."
   },
   {
     "name": "Jane Smith",
@@ -100,7 +109,10 @@
       }
     ],
     "isPendingDelete": false,
-    "owner": false
+    "owner": false,
+    "gender": "Male",
+    "age": 30,
+    "introduction": "Just a regular guy."
   },
   {
     "name": "John Doe",
@@ -128,7 +140,10 @@
       }
     ],
     "isPendingDelete": false,
-    "owner": false
+    "owner": false,
+    "gender": "Male",
+    "age": 30,
+    "introduction": "Just a regular guy."
   },
   {
     "name": "John Doe",
@@ -142,7 +157,10 @@
       }
     ],
     "isPendingDelete": false,
-    "owner": false
+    "owner": false,
+    "gender": "Male",
+    "age": 30,
+    "introduction": "Just a regular guy."
   },
   {
     "name": "Jane Smith",
@@ -161,7 +179,10 @@
       }
     ],
     "isPendingDelete": false,
-    "owner": false
+    "owner": false,
+    "gender": "Male",
+    "age": 30,
+    "introduction": "Just a regular guy."
   },
   {
     "name": "Jane Smith",
@@ -180,7 +201,10 @@
       }
     ],
     "isPendingDelete": false,
-    "owner": false
+    "owner": false,
+    "gender": "Male",
+    "age": 30,
+    "introduction": "Just a regular guy."
   },
   {
     "name": "Jane Smith",
@@ -199,6 +223,9 @@
       }
     ],
     "isPendingDelete": false,
-    "owner": false
+    "owner": false,
+    "gender": "Male",
+    "age": 30,
+    "introduction": "Just a regular guy."
   }
 ]
