@@ -5,6 +5,7 @@
     <!-- Add Internet permission -->
     <uses-permission android:name="android.permission.INTERNET" />
 
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -17,7 +18,9 @@
         tools:targetApi="31">
         <activity
             android:name=".MainActivity"
-            android:exported="true">
+            android:exported="true"
+            android:windowSoftInputMode="adjustPan"> // 자판 올라올 때 bottom_nav 같이 올라오는 거 방지
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

@@ -1,3 +1,5 @@
+// app/src/main/java/com/example/madcamp_week1/ContactListFragment.kt
+
 package com.example.madcamp_week1
 
 import android.graphics.Canvas
@@ -10,9 +12,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.madcamp_week1.viewmodel.ContactViewModel
 import com.google.gson.Gson
 import java.io.BufferedReader
 import java.io.InputStreamReader
@@ -22,6 +26,8 @@ class ContactListFragment : Fragment() {
     private lateinit var contactRecyclerView: RecyclerView
     private lateinit var contactAdapter: ContactAdapter
     private val deletedContacts = mutableListOf<Contact>()
+
+    private val contactViewModel: ContactViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -39,7 +45,7 @@ class ContactListFragment : Fragment() {
         }
 
         contactRecyclerView.layoutManager = LinearLayoutManager(context)
-        contactAdapter = ContactAdapter(requireContext(), getContactList().toMutableList())
+        contactAdapter = ContactAdapter(requireContext(), contactViewModel.contactList)
         contactRecyclerView.adapter = contactAdapter
 
         // 구분선 추가
@@ -124,6 +130,12 @@ class ContactListFragment : Fragment() {
         itemTouchHelper.attachToRecyclerView(contactRecyclerView)
 
         return view
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        contactViewModel.loadContacts(getContactList())
+        contactAdapter.notifyDataSetChanged()
     }
 
     private fun getContactList(): List<Contact> {
