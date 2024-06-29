@@ -28,5 +28,14 @@
         android:id="@+id/notificationsFragment"
         android:name="com.example.madcamp_week1.Tab3Fragment"
         android:label="Notifications"
-        tools:layout="@layout/fragment_images" />
+        tools:layout="@layout/fragment_geul">
+        <action
+            android:id="@+id/action_tab3Fragment_to_addWritingFragment"
+            app:destination="@id/addWritingFragment" />
+    </fragment>>
+    <fragment
+        android:id="@+id/addWritingFragment"
+        android:name="com.example.madcamp_week1.AddWritingFragment"
+        android:label="fragment_add_writing"
+        tools:layout="@layout/fragment_add_writing" />
 </navigation>
