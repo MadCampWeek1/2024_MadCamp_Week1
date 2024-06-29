@@ -12,9 +12,13 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.madcamp_week1.viewmodel.ContactViewModel
 
-class ContactAdapter(private val context: Context, private var contactList: MutableList<Contact>) :
-    RecyclerView.Adapter<ContactAdapter.ContactViewHolder>() {
+class ContactAdapter(
+    private val context: Context,
+    var contactList: MutableList<Contact>,
+    private val contactViewModel: ContactViewModel
+) : RecyclerView.Adapter<ContactAdapter.ContactViewHolder>() {
 
     class ContactViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val nameTextView: TextView = itemView.findViewById(R.id.contact_name)
@@ -38,21 +42,17 @@ class ContactAdapter(private val context: Context, private var contactList: Muta
         }
 
         holder.deleteImageView.setOnClickListener {
-            removeItem(position)
+            contactViewModel.removeContact(currentContact)
+            notifyItemRemoved(position)
+            Toast.makeText(context, "Contact deleted: ${currentContact.name}", Toast.LENGTH_SHORT).show()
         }
     }
 
     override fun getItemCount() = contactList.size
 
-    fun removeItem(position: Int): Contact {
-        val deletedContact = contactList.removeAt(position)
-        notifyItemRemoved(position)
-        return deletedContact
-    }
-
-    fun onItemSwiped(position: Int) {
-        contactList[position].isPendingDelete = true
-        notifyItemChanged(position)
+    fun updateList(newList: List<Contact>) {
+        contactList = newList.toMutableList()
+        notifyDataSetChanged()
     }
 
     private fun showContactDialog(contact: Contact) {
@@ -69,7 +69,7 @@ class ContactAdapter(private val context: Context, private var contactList: Muta
         Glide.with(context)
             .load(contact.profileImage)
             .placeholder(R.drawable.ic_contact_placeholder)
-            .error(R.drawable.ic_contact_placeholder) // Add error placeholder
+            .error(R.drawable.ic_contact_placeholder)
             .into(contactImageView)
 
         contactNameTextView.text = contact.name
