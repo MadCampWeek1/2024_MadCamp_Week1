@@ -78,25 +78,27 @@ class Tab3Fragment : Fragment() {
         container.removeAllViews() // Clear the container before populating
         for (contact in contactList) {
             for (writing in contact.writing) {
+                loadLikedState(contact) // Load liked state for each writing
                 val writingView = createWritingView(contact, writing)
                 container.addView(writingView)
             }
         }
     }
 
-    private fun createWritingView(contact: Contact, text: String): View {
+
+    private fun createWritingView(contact: Contact, writing: Writing): View {
         val context = requireContext()
 
-        // Create a LinearLayout to hold author, text, and profile icon
-        val layout = LinearLayout(context)
-        val layoutParams = LinearLayout.LayoutParams(
+        // Create a LinearLayout to hold the entire writing item
+        val mainLayout = LinearLayout(context)
+        val mainLayoutParams = LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.MATCH_PARENT,
             LinearLayout.LayoutParams.WRAP_CONTENT
         )
-        layoutParams.setMargins(5, 10, 5, 40) // Add margins between writings
-        layout.layoutParams = layoutParams
-        layout.orientation = LinearLayout.VERTICAL
-        layout.setBackgroundResource(R.drawable.background_rounded_gray) // Rounded background
+        mainLayoutParams.setMargins(5, 10, 5, 40) // Add margins between writings
+        mainLayout.layoutParams = mainLayoutParams
+        mainLayout.orientation = LinearLayout.VERTICAL
+        mainLayout.setBackgroundResource(R.drawable.background_rounded_gray) // Rounded background
 
         // Create horizontal LinearLayout to hold profile icon and author name
         val authorLayout = LinearLayout(context)
@@ -121,26 +123,109 @@ class Tab3Fragment : Fragment() {
         // Create TextView for author
         val authorTextView = TextView(context)
         authorTextView.text = contact.name
-        authorTextView.textSize = 25f
+        authorTextView.textSize = 15f
         authorTextView.setPadding(16, 0, 0, 0) // Adjust padding as needed
         authorTextView.setOnClickListener {
             showContactDialog(contact)
         }
-
         authorLayout.addView(authorTextView)
 
-        // Add authorLayout (profile icon + author name) to main layout
-        layout.addView(authorLayout)
+        // Add authorLayout (profile icon + author name) to mainLayout
+        mainLayout.addView(authorLayout)
 
         // Create TextView for writing text
         val textView = TextView(context)
-        textView.text = text
-        textView.textSize = 20f
+        textView.text = writing.text
+        textView.textSize = 25f
         textView.setPadding(100, 16, 100, 50) // Padding for writing text
-        layout.addView(textView)
 
-        return layout
+        // Set TextView to be not clickable and focusable
+        textView.isClickable = false
+        textView.isFocusable = false
+
+        mainLayout.addView(textView)
+
+        // Create LinearLayout to hold the heart button
+        val heartButtonLayout = LinearLayout(context)
+        heartButtonLayout.layoutParams = LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.WRAP_CONTENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT
+        )
+        heartButtonLayout.orientation = LinearLayout.HORIZONTAL
+        heartButtonLayout.gravity = Gravity.START
+        heartButtonLayout.setPadding(50, 0, 0, 16) // Padding for heart button
+
+        // Create heart button
+        val heartButton = ImageButton(context)
+        heartButton.setImageResource(
+            if (writing.isLiked) R.drawable.ic_heart_liked else R.drawable.ic_heart_unliked
+        )
+        heartButton.setBackgroundResource(android.R.color.transparent) // Make button background transparent
+        heartButton.setPadding(16, 16, 16, 16) // Adjust padding as needed
+        heartButton.layoutParams = LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.WRAP_CONTENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT
+        )
+
+        var isLiked = writing.isLiked
+
+        heartButton.setOnClickListener {
+            isLiked = !isLiked
+            heartButton.setImageResource(
+                if (isLiked) R.drawable.ic_heart_liked else R.drawable.ic_heart_unliked
+            )
+            writing.isLiked = isLiked
+            saveLikedState(contact, writing)
+        }
+
+        // Add heart button to heartButtonLayout
+        heartButtonLayout.addView(heartButton)
+
+        // Add heartButtonLayout to mainLayout
+        mainLayout.addView(heartButtonLayout)
+
+        return mainLayout
     }
+
+    private fun saveLikedState(contact: Contact, writing: Writing) {
+        val prefs = requireContext().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
+        val editor = prefs.edit()
+
+        // Find the index of the writing in the contact's list
+        val index = contact.writing.indexOfFirst { it.text == writing.text }
+        if (index != -1) {
+            // Update the writing object in the list
+            contact.writing[index] = writing
+
+            // Serialize the contact object to JSON
+            val gson = Gson()
+            val json = gson.toJson(contact)
+
+            // Save the JSON string to SharedPreferences using the contact's name as key
+            editor.putString(contact.name, json)
+            editor.apply()
+        }
+    }
+
+
+    private fun loadLikedState(contact: Contact) {
+        val prefs = requireContext().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
+        val gson = Gson()
+        val json = prefs.getString(contact.name, null)
+
+        if (json != null) {
+            // Deserialize JSON to Contact object
+            val savedContact = gson.fromJson(json, Contact::class.java)
+
+            // Update each writing's liked state based on savedContact
+            for (savedWriting in savedContact.writing) {
+                val writing = contact.writing.find { it.text == savedWriting.text }
+                writing?.isLiked = savedWriting.isLiked
+                writing?.likeNum = savedWriting.likeNum
+            }
+        }
+    }
+
     private fun showContactDialog(contact: Contact) {
         val dialog = Dialog(requireContext())
         val inflater = LayoutInflater.from(requireContext())
@@ -189,3 +274,9 @@ class Tab3Fragment : Fragment() {
         }
     }
 }
+
+data class Writing(
+    val text: String,
+    var isLiked: Boolean = false, // Default is unliked
+    var likeNum: Int = 0
+)
