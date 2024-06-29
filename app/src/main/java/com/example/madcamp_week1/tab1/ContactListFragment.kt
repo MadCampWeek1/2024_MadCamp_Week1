@@ -1,7 +1,6 @@
-// app/src/main/java/com/example/madcamp_week1/ContactListFragment.kt
-
 package com.example.madcamp_week1
 
+import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
@@ -10,14 +9,17 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.madcamp_week1.viewmodel.ContactViewModel
 import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import java.io.BufferedReader
 import java.io.InputStreamReader
 
@@ -25,7 +27,7 @@ class ContactListFragment : Fragment() {
 
     private lateinit var contactRecyclerView: RecyclerView
     private lateinit var contactAdapter: ContactAdapter
-    private val deletedContacts = mutableListOf<Contact>()
+    private lateinit var searchView: SearchView
 
     private val contactViewModel: ContactViewModel by activityViewModels()
 
@@ -38,21 +40,32 @@ class ContactListFragment : Fragment() {
 
         // RecyclerView 설정
         contactRecyclerView = view.findViewById(R.id.recycler_view_contacts)
-        if (contactRecyclerView == null) {
-            Log.e("ContactListFragment", "RecyclerView is null")
-        } else {
-            Log.d("ContactListFragment", "RecyclerView found")
-        }
-
         contactRecyclerView.layoutManager = LinearLayoutManager(context)
-        contactAdapter = ContactAdapter(requireContext(), contactViewModel.contactList)
+        contactAdapter = ContactAdapter(requireContext(), mutableListOf(), contactViewModel)
         contactRecyclerView.adapter = contactAdapter
+
+        // LiveData 옵저버 설정
+        contactViewModel.contactList.observe(viewLifecycleOwner, Observer { contacts ->
+            contactAdapter.updateList(contacts)
+        })
+
+        // SearchView 설정
+        searchView = view.findViewById(R.id.search_view)
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                val filteredContacts = contactViewModel.filterContacts(newText ?: "")
+                contactAdapter.updateList(filteredContacts)
+                return true
+            }
+        })
 
         // 구분선 추가
         val dividerItemDecoration = DividerItemDecoration(requireContext(), R.drawable.divider)
         contactRecyclerView.addItemDecoration(dividerItemDecoration)
-
-        Log.d("ContactListFragment", "Adapter set")
 
         // ItemTouchHelper 설정
         val itemTouchHelper = ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
@@ -66,8 +79,8 @@ class ContactListFragment : Fragment() {
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val position = viewHolder.adapterPosition
-                val deletedContact = contactAdapter.removeItem(position)
-                deletedContacts.add(deletedContact)
+                val deletedContact = contactAdapter.contactList[position]
+                removeContact(deletedContact)
                 Log.d("ContactListFragment", "Contact deleted: $deletedContact")
             }
 
@@ -99,7 +112,7 @@ class ContactListFragment : Fragment() {
                             c.drawRect(
                                 itemView.left.toFloat(),
                                 itemView.top.toFloat(),
-                                itemView.left + 3 * dX,
+                                itemView.left + dX,
                                 itemView.bottom.toFloat(),
                                 paint
                             )
@@ -110,7 +123,7 @@ class ContactListFragment : Fragment() {
                             val iconLeft = iconRight - icon.intrinsicWidth
                             icon.setBounds(iconLeft, iconTop, iconRight, iconBottom)
                             c.drawRect(
-                                itemView.right + 3 * dX,
+                                itemView.right + dX,
                                 itemView.top.toFloat(),
                                 itemView.right.toFloat(),
                                 itemView.bottom.toFloat(),
@@ -134,8 +147,7 @@ class ContactListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        contactViewModel.loadContacts(getContactList())
-        contactAdapter.notifyDataSetChanged()
+        loadContactsFromSharedPreferences()
     }
 
     private fun getContactList(): List<Contact> {
@@ -158,5 +170,41 @@ class ContactListFragment : Fragment() {
             Log.e("ContactListFragment", "Error reading contacts from JSON", e)
             emptyList()
         }
+    }
+
+    private fun saveContactsToSharedPreferences() {
+        try {
+            val sharedPreferences = requireActivity().getSharedPreferences("contacts", Context.MODE_PRIVATE)
+            val editor = sharedPreferences.edit()
+            val gson = Gson()
+            val json = gson.toJson(contactViewModel.contactList.value)
+            editor.putString("contact_list", json)
+            editor.apply()
+        } catch (e: Exception) {
+            Log.e("ContactListFragment", "Error saving contacts to SharedPreferences", e)
+        }
+    }
+
+    private fun loadContactsFromSharedPreferences() {
+        try {
+            val sharedPreferences = requireActivity().getSharedPreferences("contacts", Context.MODE_PRIVATE)
+            val gson = Gson()
+            val json = sharedPreferences.getString("contact_list", null)
+            if (json != null) {
+                val contactType = object : TypeToken<List<Contact>>() {}.type
+                val contacts: List<Contact> = gson.fromJson(json, contactType)
+                contactViewModel.loadContacts(contacts)
+            } else {
+                contactViewModel.loadContacts(getContactList())
+            }
+        } catch (e: Exception) {
+            Log.e("ContactListFragment", "Error loading contacts from SharedPreferences", e)
+            contactViewModel.loadContacts(getContactList())
+        }
+    }
+
+    fun removeContact(contact: Contact) {
+        contactViewModel.removeContact(contact)
+        saveContactsToSharedPreferences()
     }
 }
