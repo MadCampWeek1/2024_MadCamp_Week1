@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 
@@ -22,15 +23,15 @@ class HomeFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_images, container, false)
 
         // Setup buttons for different themes
-        view.findViewById<Button>(R.id.btnTheme1).apply {
-            setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.dog1, 0, 0) // Set image on top
+        view.findViewById<CardView>(R.id.btnTheme1).apply {
+            //setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.dog1, 0, 0) // Set image on top
             setOnClickListener {
                 onCategoryItemClicked(R.id.action_homeFragment_to_themeDetailFragment, theme1Images)
             }
         }
 
-        view.findViewById<Button>(R.id.btnTheme2).apply {
-            setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.food1, 0, 0) // Set image on top
+        view.findViewById<CardView>(R.id.btnTheme2).apply {
+            //setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.food1, 0, 0) // Set image on top
             setOnClickListener {
                 onCategoryItemClicked(R.id.action_homeFragment_to_themeDetailFragment, theme2Images)
             }
@@ -38,8 +39,8 @@ class HomeFragment : Fragment() {
 
         // Add more buttons for additional themes
         // Example: For theme3Images and theme4Images
-        view.findViewById<Button>(R.id.btnTheme3).apply {
-            setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.people1, 0, 0) // Set image on top
+        view.findViewById<CardView>(R.id.btnTheme3).apply {
+            //setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.people1, 0, 0) // Set image on top
             setOnClickListener {
                 onCategoryItemClicked(R.id.action_homeFragment_to_themeDetailFragment, theme3Images)
             }

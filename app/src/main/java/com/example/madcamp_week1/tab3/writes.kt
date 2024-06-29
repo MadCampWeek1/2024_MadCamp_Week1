@@ -1,21 +1,26 @@
 package com.example.madcamp_week1
 
+import android.app.Dialog
+import android.content.Context
 import android.os.Bundle
+import android.util.DisplayMetrics
+import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.TextView
+import android.widget.*
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation.findNavController
 import androidx.navigation.fragment.findNavController
+import com.bumptech.glide.Glide
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import kotlinx.android.synthetic.main.fragment_geul.*
+import java.io.FileInputStream
+import java.io.FileNotFoundException
 
 class Tab3Fragment : Fragment() {
 
@@ -27,7 +32,7 @@ class Tab3Fragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_geul, container, false)
         val writingsContainer = view.findViewById<LinearLayout>(R.id.writings_container)
 
-        val contactList = readContactsFromJson()
+        val contactList = readContactsFromJson(requireContext())
 
         populateWritings(contactList, writingsContainer)
 
@@ -42,23 +47,44 @@ class Tab3Fragment : Fragment() {
         return view
     }
 
-    private fun readContactsFromJson(): List<Contact> {
-        val jsonFile = resources.openRawResource(R.raw.contact)
-        val jsonString = BufferedReader(InputStreamReader(jsonFile)).use { it.readText() }
-        val gson = Gson()
-        return gson.fromJson(jsonString, object : TypeToken<List<Contact>>() {}.type)
+    fun readContactsFromJson(context: Context): List<Contact> {
+        val contacts = mutableListOf<Contact>()
+        try {
+            // Open an InputStream to read the raw resource
+            val inputStream = context.resources.openRawResource(R.raw.contact)
+            val reader = BufferedReader(InputStreamReader(inputStream))
+
+            // Read the JSON data into a StringBuilder
+            val jsonStringBuilder = StringBuilder()
+            var line: String?
+            while (reader.readLine().also { line = it } != null) {
+                jsonStringBuilder.append(line)
+            }
+
+            // Parse JSON using Gson
+            val type = object : TypeToken<List<Contact>>() {}.type
+            contacts.addAll(Gson().fromJson(jsonStringBuilder.toString(), type))
+
+            // Close the reader
+            reader.close()
+        } catch (e: Exception) {
+            Log.e("Tab3Fragment", "Error reading contacts from JSON: ${e.message}")
+        }
+        return contacts
     }
 
+
     private fun populateWritings(contactList: List<Contact>, container: LinearLayout) {
+        container.removeAllViews() // Clear the container before populating
         for (contact in contactList) {
             for (writing in contact.writing) {
-                val writingView = createWritingView(contact.name, writing)
+                val writingView = createWritingView(contact, writing)
                 container.addView(writingView)
             }
         }
     }
 
-    private fun createWritingView(author: String, text: String): View {
+    private fun createWritingView(contact: Contact, text: String): View {
         val context = requireContext()
 
         // Create a LinearLayout to hold author, text, and profile icon
@@ -94,9 +120,13 @@ class Tab3Fragment : Fragment() {
 
         // Create TextView for author
         val authorTextView = TextView(context)
-        authorTextView.text = author
+        authorTextView.text = contact.name
         authorTextView.textSize = 25f
         authorTextView.setPadding(16, 0, 0, 0) // Adjust padding as needed
+        authorTextView.setOnClickListener {
+            showContactDialog(contact)
+        }
+
         authorLayout.addView(authorTextView)
 
         // Add authorLayout (profile icon + author name) to main layout
@@ -110,5 +140,52 @@ class Tab3Fragment : Fragment() {
         layout.addView(textView)
 
         return layout
+    }
+    private fun showContactDialog(contact: Contact) {
+        val dialog = Dialog(requireContext())
+        val inflater = LayoutInflater.from(requireContext())
+        val dialogView = inflater.inflate(R.layout.dialog_contact_info, null)
+
+        val contactImageView: ImageView = dialogView.findViewById(R.id.contact_image)
+        val contactNameTextView: TextView = dialogView.findViewById(R.id.contact_name)
+        val contactPhoneTextView: TextView = dialogView.findViewById(R.id.contact_phone)
+        val sendMessageButton: Button = dialogView.findViewById(R.id.send_message_button)
+
+        // Load contact image using Glide
+        Glide.with(requireContext())
+            .load(contact.profileImage)
+            .placeholder(R.drawable.ic_contact_placeholder)
+            .error(R.drawable.ic_contact_placeholder) // Add error placeholder
+            .into(contactImageView)
+
+        contactNameTextView.text = contact.name
+        contactPhoneTextView.text = contact.phone
+
+        // Set button click listener
+        sendMessageButton.setOnClickListener {
+            Toast.makeText(requireContext(), "Message sent to ${contact.name}", Toast.LENGTH_SHORT).show()
+            // Perform any additional actions here
+        }
+
+        dialog.setContentView(dialogView)
+        dialog.show()
+
+        // Set dialog width and height
+        val window = dialog.window
+        if (window != null) {
+            val metrics = DisplayMetrics()
+            window.windowManager.defaultDisplay.getMetrics(metrics)
+            val width = (metrics.widthPixels * 0.8).toInt()
+            val height = (metrics.heightPixels * 0.45).toInt()
+            window.setLayout(width, height)
+
+            // Set button width to match 80% of dialog width
+            val buttonWidth = (width * 0.7).toInt()
+            sendMessageButton.post {
+                val layoutParams = sendMessageButton.layoutParams
+                layoutParams.width = buttonWidth
+                sendMessageButton.layoutParams = layoutParams
+            }
+        }
     }
 }
