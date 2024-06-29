@@ -12,16 +12,13 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var navController: NavController
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val toolbar1 = findViewById<MaterialToolbar>(R.id.topAppBar1)
-        setSupportActionBar(toolbar1)
-
-        val toolbar2 = findViewById<MaterialToolbar>(R.id.topAppBar2)
-        setSupportActionBar(toolbar2)
+        // Set up Toolbar
+        val toolbar = findViewById<MaterialToolbar>(R.id.topAppBar1)
+        setSupportActionBar(toolbar)
 
         val toolbar3 = findViewById<MaterialToolbar>(R.id.topAppBar3)
         setSupportActionBar(toolbar3)
