@@ -44,6 +44,7 @@ class ContactAdapter(
         holder.deleteImageView.setOnClickListener {
             contactViewModel.removeContact(currentContact)
             notifyItemRemoved(position)
+            notifyItemRangeChanged(position, contactList.size)
             Toast.makeText(context, "Contact deleted: ${currentContact.name}", Toast.LENGTH_SHORT).show()
         }
     }
@@ -63,6 +64,9 @@ class ContactAdapter(
         val contactImageView: ImageView = dialogView.findViewById(R.id.contact_image)
         val contactNameTextView: TextView = dialogView.findViewById(R.id.contact_name)
         val contactPhoneTextView: TextView = dialogView.findViewById(R.id.contact_phone)
+        val contactGenderTextView: TextView = dialogView.findViewById(R.id.contact_gender)
+        val contactAgeTextView: TextView = dialogView.findViewById(R.id.contact_age)
+        val contactIntroductionTextView: TextView = dialogView.findViewById(R.id.contact_introduction)
         val sendMessageButton: Button = dialogView.findViewById(R.id.send_message_button)
 
         // Load contact image using Glide
@@ -74,6 +78,9 @@ class ContactAdapter(
 
         contactNameTextView.text = contact.name
         contactPhoneTextView.text = contact.phone
+        contactGenderTextView.text = "Gender: ${contact.gender}"
+        contactAgeTextView.text = "Age: ${contact.age?.toString()}"
+        contactIntroductionTextView.text = contact.introduction
 
         // Set button click listener
         sendMessageButton.setOnClickListener {
@@ -90,7 +97,7 @@ class ContactAdapter(
             val metrics = DisplayMetrics()
             window.windowManager.defaultDisplay.getMetrics(metrics)
             val width = (metrics.widthPixels * 0.8).toInt()
-            val height = (metrics.heightPixels * 0.45).toInt()
+            val height = (metrics.heightPixels * 0.5).toInt()
             window.setLayout(width, height)
 
             // Set button width to match 80% of dialog width

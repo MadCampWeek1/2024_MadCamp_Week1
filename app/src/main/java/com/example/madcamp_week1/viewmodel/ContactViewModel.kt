@@ -22,9 +22,10 @@ class ContactViewModel : ViewModel() {
     }
 
     fun removeContact(contact: Contact) {
-        val updatedList = contactList.value?.toMutableList()
-        if (updatedList?.remove(contact) == true) {
-            contactList.value = updatedList // Trigger LiveData update
+        val currentList = contactList.value
+        currentList?.let {
+            it.remove(contact)
+            contactList.value = it // Trigger LiveData update
         }
     }
 }

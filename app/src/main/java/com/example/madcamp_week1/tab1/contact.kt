@@ -25,3 +25,4 @@ data class Contact(
     var isPendingDelete: Boolean = false,
     val owner: Boolean
 )
+

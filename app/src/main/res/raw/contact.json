@@ -27,6 +27,7 @@
     "name": "Jane Smith",
     "phone": "987-654-3210",
     "profileImage": "https://c.files.bbci.co.uk/DCE1/production/_104454565_mary-mcgowan_caught-in-the-act_00001294.jpg",
+
     "writing": [
       {
         "text": "what a beautiful day",
@@ -56,6 +57,7 @@
     "name": "John Doe",
     "phone": "123-456-7890",
     "profileImage": "https://c.files.bbci.co.uk/DCE1/production/_104454565_mary-mcgowan_caught-in-the-act_00001294.jpg",
+
     "writing": [
       {
         "text": "head",
