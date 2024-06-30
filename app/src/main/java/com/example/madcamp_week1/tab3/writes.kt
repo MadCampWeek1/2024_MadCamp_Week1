@@ -16,62 +16,165 @@ import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import java.io.BufferedReader
-import java.io.InputStreamReader
 import kotlinx.android.synthetic.main.fragment_geul.*
-import java.io.FileInputStream
-import java.io.FileNotFoundException
+import java.io.*
 
 class Tab3Fragment : Fragment() {
+
+    private lateinit var writingsContainer: LinearLayout
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        val view = inflater.inflate(R.layout.fragment_geul, container, false)
-        val writingsContainer = view.findViewById<LinearLayout>(R.id.writings_container)
+        return inflater.inflate(R.layout.fragment_geul, container, false)
+    }
 
-        val contactList = readContactsFromJson(requireContext())
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-        populateWritings(contactList, writingsContainer)
+        writingsContainer = view.findViewById(R.id.writings_container)
 
         view.findViewById<View>(R.id.fab_add).setOnClickListener {
-            val currentDestination = findNavController().currentDestination
-            if (currentDestination?.id == R.id.notificationsFragment) {
-                // Navigate to AddWritingFragment only if it's not already there
-                findNavController().navigate(R.id.action_tab3Fragment_to_addWritingFragment)
-            }
+            findNavController().navigate(R.id.action_tab3Fragment_to_addWritingFragment)
         }
 
-        return view
+        val args = arguments
+        if (args != null && args.containsKey("newWriting")) {
+            val newWriting = args.getString("newWriting", "")
+            if (!newWriting.isNullOrEmpty()) {
+                // Save the new writing to your data (SharedPreferences or JSON file)
+                saveNewWriting(newWriting)
+            }
+        }
+    }
+
+    private fun saveNewWriting(newWriting: String) {
+        if (newWriting.isEmpty()) return
+
+        val gson = Gson()
+        val context = requireContext()
+
+        // Ensure context is not null before proceeding
+        context ?: return
+
+        try {
+            // Read existing contacts from file
+            val filename = "contact.json"
+            val file = File(context.filesDir, filename)
+
+            val contactList: MutableList<Contact> = if (file.exists()) {
+                // File exists, read its content
+                val inputStream = FileInputStream(file)
+                val reader = BufferedReader(InputStreamReader(inputStream))
+
+                val jsonStringBuilder = StringBuilder()
+                var line: String?
+                while (reader.readLine().also { line = it } != null) {
+                    jsonStringBuilder.append(line)
+                }
+
+                reader.close()
+                gson.fromJson(jsonStringBuilder.toString(), object : TypeToken<MutableList<Contact>>() {}.type)
+            } else {
+                // File does not exist, create a new list
+                mutableListOf()
+            }
+
+            // Log current contact list for debugging
+            Log.d("Tab3Fragment", "Before Adding: $contactList")
+
+            // Find the contact with owner = true and add the new writing
+            val ownerContact = contactList.find { it.owner }
+            if (ownerContact != null) {
+                ownerContact.writing.add(Writing(newWriting, false, 0))
+            } else {
+                Log.d("Tab3Fragment", "No owner contact found")
+            }
+
+            // Write the updated contact list back to JSON file
+            val json = gson.toJson(contactList)
+            context.openFileOutput(filename, Context.MODE_PRIVATE).use {
+                it.write(json.toByteArray())
+            }
+
+            // Log updated contact list for debugging
+            Log.d("Tab3Fragment", "After Adding: $contactList")
+
+            // Log the contact list again after updating for debugging
+            logContactList()
+
+        } catch (e: Exception) {
+            Log.e("Tab3Fragment", "Error saving new writing: ${e.message}")
+        }
+    }
+
+
+
+    private fun logContactList() {
+        val filename = "contact.json"
+        val gson = Gson()
+
+        // Construct the file path in internal storage
+        val file = File(requireContext().filesDir, filename)
+
+        if (file.exists()) {
+            val contactList: List<Contact> = file.inputStream().bufferedReader().use {
+                gson.fromJson(it, object : TypeToken<List<Contact>>() {}.type)
+            }
+
+            // Log the contact list for debugging
+            Log.d("Tab3Fragment", "Contact List: $contactList")
+        } else {
+            Log.d("Tab3Fragment", "Contact file does not exist.")
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // Reload data and update UI when fragment resumes
+        val contactList = readContactsFromJson(requireContext())
+        Log.d("Tab3Fragment", "Read from Json: $contactList")
+        populateWritings(contactList, writingsContainer)
     }
 
     fun readContactsFromJson(context: Context): List<Contact> {
         val contacts = mutableListOf<Contact>()
         try {
-            // Open an InputStream to read the raw resource
-            val inputStream = context.resources.openRawResource(R.raw.contact)
-            val reader = BufferedReader(InputStreamReader(inputStream))
+            // Construct the file path in internal storage
+            val filename = "contact.json"
+            val file = File(context.filesDir, filename)
 
-            // Read the JSON data into a StringBuilder
-            val jsonStringBuilder = StringBuilder()
-            var line: String?
-            while (reader.readLine().also { line = it } != null) {
-                jsonStringBuilder.append(line)
+            // Check if the file exists
+            if (file.exists()) {
+                // Open an InputStream to read the file
+                val inputStream = FileInputStream(file)
+                val reader = BufferedReader(InputStreamReader(inputStream))
+
+                // Read the JSON data into a StringBuilder
+                val jsonStringBuilder = StringBuilder()
+                var line: String?
+                while (reader.readLine().also { line = it } != null) {
+                    jsonStringBuilder.append(line)
+                }
+
+                // Parse JSON using Gson
+                val type = object : TypeToken<List<Contact>>() {}.type
+                contacts.addAll(Gson().fromJson(jsonStringBuilder.toString(), type))
+
+                // Close the reader
+                reader.close()
+                Log.d("Tab3Fragment", "Read contacts from internal storage: $contacts")
+            } else {
+                Log.d("Tab3Fragment", "Contact file does not exist.")
             }
-
-            // Parse JSON using Gson
-            val type = object : TypeToken<List<Contact>>() {}.type
-            contacts.addAll(Gson().fromJson(jsonStringBuilder.toString(), type))
-
-            // Close the reader
-            reader.close()
         } catch (e: Exception) {
             Log.e("Tab3Fragment", "Error reading contacts from JSON: ${e.message}")
         }
         return contacts
     }
+
 
 
     private fun populateWritings(contactList: List<Contact>, container: LinearLayout) {
