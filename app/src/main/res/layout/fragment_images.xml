@@ -15,171 +15,179 @@
         app:title="Gallery"
         app:titleTextColor="@android:color/white" />
 
-    <!-- Content below the toolbar -->
-    <LinearLayout
+    <!-- ScrollView to make the content scrollable -->
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:padding="16dp">
+        android:fillViewport="true">
 
-        <!-- Theme 1 CardView -->
-        <androidx.cardview.widget.CardView
-            android:id="@+id/btnTheme1"
+        <!-- Content below the toolbar inside ScrollView -->
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:layout_marginBottom="16dp"
-            android:background="?attr/selectableItemBackground"
-            android:elevation="4dp"
-            android:foreground="?attr/selectableItemBackground">
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
 
-            <LinearLayout
+            <!-- Theme 1 CardView -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/btnTheme1"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
-
-                <ImageView
-                    android:id="@+id/imageTheme1"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:src="@drawable/dog1"
-                    android:scaleType="centerCrop"
-                    android:alpha="0.7" />
+                android:layout_height="200dp"
+                android:layout_marginBottom="16dp"
+                android:background="?attr/selectableItemBackground"
+                android:elevation="4dp"
+                android:foreground="?attr/selectableItemBackground">
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="16dp">
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="동물"
-                        android:textSize="18sp"
-                        android:textColor="@android:color/white"
-                        android:textStyle="bold"
-                        android:layout_gravity="center_horizontal"/>
+                    <ImageView
+                        android:id="@+id/imageTheme1"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/dog1"
+                        android:scaleType="centerCrop"
+                        android:alpha="0.7" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="반려동물"
-                        android:textSize="14sp"
-                        android:textColor="@android:color/black"
-                        android:layout_marginTop="8dp"
-                        android:layout_gravity="center_horizontal"/>
+                        android:orientation="vertical"
+                        android:padding="16dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="동물"
+                            android:textSize="18sp"
+                            android:textColor="@android:color/white"
+                            android:textStyle="bold"
+                            android:layout_gravity="center_horizontal"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="반려동물"
+                            android:textSize="14sp"
+                            android:textColor="@android:color/black"
+                            android:layout_marginTop="8dp"
+                            android:layout_gravity="center_horizontal"/>
+
+                    </LinearLayout>
 
                 </LinearLayout>
 
-            </LinearLayout>
+            </androidx.cardview.widget.CardView>
 
-        </androidx.cardview.widget.CardView>
-
-        <!-- Theme 2 CardView -->
-        <androidx.cardview.widget.CardView
-            android:id="@+id/btnTheme2"
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:layout_marginBottom="16dp"
-            android:background="?attr/selectableItemBackground"
-            android:elevation="4dp"
-            android:foreground="?attr/selectableItemBackground">
-
-            <LinearLayout
+            <!-- Theme 2 CardView -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/btnTheme2"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
-
-                <ImageView
-                    android:id="@+id/imageTheme2"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:src="@drawable/food1"
-                    android:scaleType="centerCrop"
-                    android:alpha="0.7" />
+                android:layout_height="200dp"
+                android:layout_marginBottom="16dp"
+                android:background="?attr/selectableItemBackground"
+                android:elevation="4dp"
+                android:foreground="?attr/selectableItemBackground">
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="16dp">
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="음식"
-                        android:textSize="18sp"
-                        android:textColor="@android:color/white"
-                        android:textStyle="bold"
-                        android:layout_gravity="center_horizontal"/>
+                    <ImageView
+                        android:id="@+id/imageTheme2"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/food1"
+                        android:scaleType="centerCrop"
+                        android:alpha="0.7" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="음식"
-                        android:textSize="14sp"
-                        android:textColor="@android:color/black"
-                        android:layout_marginTop="8dp"
-                        android:layout_gravity="center_horizontal"/>
+                        android:orientation="vertical"
+                        android:padding="16dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="음식"
+                            android:textSize="18sp"
+                            android:textColor="@android:color/white"
+                            android:textStyle="bold"
+                            android:layout_gravity="center_horizontal"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="음식"
+                            android:textSize="14sp"
+                            android:textColor="@android:color/black"
+                            android:layout_marginTop="8dp"
+                            android:layout_gravity="center_horizontal"/>
+
+                    </LinearLayout>
 
                 </LinearLayout>
 
-            </LinearLayout>
+            </androidx.cardview.widget.CardView>
 
-        </androidx.cardview.widget.CardView>
-
-        <!-- Theme 3 CardView -->
-        <androidx.cardview.widget.CardView
-            android:id="@+id/btnTheme3"
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:background="?attr/selectableItemBackground"
-            android:elevation="4dp"
-            android:foreground="?attr/selectableItemBackground">
-
-            <LinearLayout
+            <!-- Theme 3 CardView -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/btnTheme3"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
-
-                <ImageView
-                    android:id="@+id/imageTheme3"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:src="@drawable/people1"
-                    android:scaleType="centerCrop"
-                    android:alpha="0.7" />
+                android:layout_height="200dp"
+                android:background="?attr/selectableItemBackground"
+                android:elevation="4dp"
+                android:foreground="?attr/selectableItemBackground">
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="16dp">
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Theme 3"
-                        android:textSize="18sp"
-                        android:textColor="@android:color/white"
-                        android:textStyle="bold"
-                        android:layout_gravity="center_horizontal"/>
+                    <ImageView
+                        android:id="@+id/imageTheme3"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/people1"
+                        android:scaleType="centerCrop"
+                        android:alpha="0.7" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="내 사람들"
-                        android:textSize="14sp"
-                        android:textColor="@android:color/black"
-                        android:layout_marginTop="8dp"
-                        android:layout_gravity="center_horizontal"/>
+                        android:orientation="vertical"
+                        android:padding="16dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Theme 3"
+                            android:textSize="18sp"
+                            android:textColor="@android:color/white"
+                            android:textStyle="bold"
+                            android:layout_gravity="center_horizontal"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="내 사람들"
+                            android:textSize="14sp"
+                            android:textColor="@android:color/black"
+                            android:layout_marginTop="8dp"
+                            android:layout_gravity="center_horizontal"/>
+
+                    </LinearLayout>
 
                 </LinearLayout>
 
-            </LinearLayout>
+            </androidx.cardview.widget.CardView>
 
-        </androidx.cardview.widget.CardView>
+        </LinearLayout>
 
-    </LinearLayout>
+    </ScrollView>
 
 </LinearLayout>

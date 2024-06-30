@@ -2,8 +2,13 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    app:startDestination="@id/homeFragment">
+    app:startDestination="@id/dashboardFragment">
 
+    <fragment
+        android:id="@+id/dashboardFragment"
+        android:name="com.example.madcamp_week1.ContactListFragment"
+        android:label="Dashboard"
+        tools:layout="@layout/fragment_contact_list" />
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.example.madcamp_week1.HomeFragment"
@@ -20,11 +25,6 @@
         tools:layout="@layout/fragment_theme_detail" />
 
     <fragment
-        android:id="@+id/dashboardFragment"
-        android:name="com.example.madcamp_week1.ContactListFragment"
-        android:label="Dashboard"
-        tools:layout="@layout/fragment_contact_list" />
-    <fragment
         android:id="@+id/notificationsFragment"
         android:name="com.example.madcamp_week1.Tab3Fragment"
         android:label="Notifications"
@@ -32,10 +32,16 @@
         <action
             android:id="@+id/action_tab3Fragment_to_addWritingFragment"
             app:destination="@id/addWritingFragment" />
+        <argument
+            android:name="newWriting"
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/addWritingFragment"
         android:name="com.example.madcamp_week1.AddWritingFragment"
         android:label="fragment_add_writing"
         tools:layout="@layout/fragment_add_writing" />
+    <action
+        android:id="@+id/action_addWritingFragment_to_tab3Fragment"
+        app:destination="@id/notificationsFragment" />
 </navigation>

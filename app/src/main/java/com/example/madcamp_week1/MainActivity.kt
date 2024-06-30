@@ -32,12 +32,12 @@ class MainActivity : AppCompatActivity() {
         // Ensure all tabs navigate to their respective destinations
         bottomNavigationView.setOnNavigationItemSelectedListener { item ->
             when (item.itemId) {
-                R.id.homeFragment -> {
-                    navController.navigate(R.id.homeFragment)
-                    true
-                }
                 R.id.dashboardFragment -> {
                     navController.navigate(R.id.dashboardFragment)
+                    true
+                }
+                R.id.homeFragment -> {
+                    navController.navigate(R.id.homeFragment)
                     true
                 }
                 R.id.notificationsFragment -> {

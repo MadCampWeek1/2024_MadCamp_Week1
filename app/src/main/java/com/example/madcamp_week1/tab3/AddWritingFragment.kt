@@ -3,6 +3,7 @@ package com.example.madcamp_week1
 import android.content.Context
 import android.os.Bundle
 import android.text.InputFilter
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -44,13 +45,17 @@ class AddWritingFragment : Fragment() {
             // Get the entered writing text
             val newWriting = binding.etWriting.text.toString().trim()
 
-            saveNewWriting(newWriting)
+            Log.d("AddWritingFragment", "New Writing: $newWriting") // Log newWriting value
+            print(newWriting)
 
-            // Save the writing or perform any other action (not implemented in this example)
-            // For demonstration purposes, you can print the entered text
+            val args = Bundle()
+            args.putString("newWriting", newWriting)
 
-            // Navigate back to the previous fragment (Tab3Fragment in this case)
-            findNavController().popBackStack(R.id.notificationsFragment, false)
+            findNavController().navigate(
+                R.id.action_addWritingFragment_to_tab3Fragment,
+                args
+            )
+            //findNavController().popBackStack(R.id.notificationsFragment, false)
         }
         binding.btnBack.setOnClickListener {
             // Navigate back to the previous fragment (Tab3Fragment in this case)
@@ -61,7 +66,6 @@ class AddWritingFragment : Fragment() {
     private fun saveNewWriting(newWriting: String) {
         if (newWriting.isEmpty()) return
 
-        val filename = "contact.json"
         val gson = Gson()
 
         val context = requireContext()
@@ -69,31 +73,70 @@ class AddWritingFragment : Fragment() {
         // Ensure context is not null before proceeding
         context ?: return
 
-        // Construct the file path in internal storage
-        val file = File(context.filesDir, filename)
+        // Access the raw resource file
+        val inputStream = context.resources.openRawResource(R.raw.contact)
 
-        val contactList: MutableList<Contact> = if (file.exists()) {
-            file.inputStream().bufferedReader().use {
+        val contactList: MutableList<Contact> = try {
+            inputStream.bufferedReader().use {
                 gson.fromJson(it, object : TypeToken<MutableList<Contact>>() {}.type)
             }
-        } else {
+        } catch (e: Exception) {
+            Log.e("AddWritingFragment", "Error reading JSON file: ${e.message}")
             mutableListOf()
         }
 
-        // Read the existing contact list from JSON file
+        // Log current contact list for debugging
+        Log.d("AddWritingFragment", "Before Adding: $contactList")
 
         // Find the contact with owner = true and add the new writing
         val ownerContact = contactList.find { it.owner }
-        ownerContact?.let {
-            it.writing.add(Writing(newWriting, false, 0)) // Add newWriting to the writing list of the owner contact
+        if (ownerContact != null) {
+            ownerContact.writing.add(Writing(newWriting, false, 0))
+        } else {
+            Log.d("AddWritingFragment", "No owner contact found")
         }
+
+        // Close the input stream
+        inputStream.close()
 
         // Write the updated contact list back to JSON file
-        file.writer().use {
-            gson.toJson(contactList, it)
+        try {
+            // Re-open the output stream to write the updated JSON
+            context.openFileOutput("contact.json", Context.MODE_PRIVATE).use {
+                OutputStreamWriter(it).use { writer ->
+                    gson.toJson(contactList, writer)
+                }
+            }
+        } catch (e: Exception) {
+            Log.e("AddWritingFragment", "Error writing JSON file: ${e.message}")
         }
+
+        // Log updated contact list for debugging
+        Log.d("AddWritingFragment", "After Adding: $contactList")
+
+        // Log the contact list again after updating for debugging
+        logContactList()
     }
 
+
+    private fun logContactList() {
+        val filename = "contact.json"
+        val gson = Gson()
+
+        // Construct the file path in internal storage
+        val file = File(requireContext().filesDir, filename)
+
+        if (file.exists()) {
+            val contactList: List<Contact> = file.inputStream().bufferedReader().use {
+                gson.fromJson(it, object : TypeToken<List<Contact>>() {}.type)
+            }
+
+            // Log the contact list for debugging
+            Log.d("AddWritingFragment", "Contact List: $contactList")
+        } else {
+            Log.d("AddWritingFragment", "Contact file does not exist.")
+        }
+    }
 
 
     override fun onDestroyView() {
