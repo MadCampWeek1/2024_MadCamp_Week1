@@ -12,7 +12,17 @@
         android:elevation="4dp"
         android:layout_alignParentTop="true"
         app:title="SnapGeul"
-        app:titleTextColor="@android:color/white" />
+        app:titleTextColor="@android:color/white" >
+
+        <ImageButton
+            android:id="@+id/btn_heart"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_heart_unliked"
+            android:background="?attr/selectableItemBackground"
+            android:layout_gravity="end"
+            android:layout_marginEnd="16dp" />
+    </com.google.android.material.appbar.MaterialToolbar>
 
     <ScrollView
         android:layout_width="match_parent"
