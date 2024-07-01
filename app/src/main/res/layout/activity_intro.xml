@@ -12,7 +12,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="20dp"
         android:layout_above="@id/buttonStart"
-        android:text="SnapGeul"
+        android:text="  SnapGeul  "
         android:textSize="42sp"
         android:textStyle="bold"
         android:fontFamily="@font/instagram_font"
