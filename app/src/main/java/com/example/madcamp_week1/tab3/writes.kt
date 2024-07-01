@@ -5,6 +5,7 @@ import android.content.Context
 import android.os.Bundle
 import android.util.DisplayMetrics
 import android.util.Log
+import android.util.TypedValue
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -198,10 +199,40 @@ class Tab3Fragment : Fragment() {
             LinearLayout.LayoutParams.MATCH_PARENT,
             LinearLayout.LayoutParams.WRAP_CONTENT
         )
-        mainLayoutParams.setMargins(5, 10, 5, 40) // Add margins between writings
+        mainLayout.orientation = LinearLayout.VERTICAL
+        mainLayout.setBackgroundResource(R.drawable.outer_box_background)
+        mainLayout.layoutParams = mainLayoutParams
+        mainLayoutParams.setMargins(0, 10, 0, 50) // Add margins between writings
+
+        /*mainLayoutParams.setMargins(5, 10, 5, 40) // Add margins between writings
         mainLayout.layoutParams = mainLayoutParams
         mainLayout.orientation = LinearLayout.VERTICAL
         mainLayout.setBackgroundResource(R.drawable.background_rounded_gray) // Rounded background
+*/
+        val innerLayout = LinearLayout(context)
+        innerLayout.layoutParams = LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT
+        )
+        innerLayout.orientation = LinearLayout.VERTICAL
+        innerLayout.setBackgroundResource(R.drawable.background_rounded_gray)
+        innerLayout.setPadding(100, 100, 100, 100)
+
+        val textView = TextView(context)
+        textView.layoutParams = LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT
+        )
+        textView.text = writing.text
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 23f)
+        textView.setPadding(0, 0, 0, 16)
+        innerLayout.addView(textView)
+
+        // Set TextView to be not clickable and focusable
+        textView.isClickable = false
+        textView.isFocusable = false
+
+        mainLayout.addView(innerLayout)
 
         // Create horizontal LinearLayout to hold profile icon and author name
         val authorLayout = LinearLayout(context)
@@ -211,7 +242,7 @@ class Tab3Fragment : Fragment() {
         )
         authorLayout.orientation = LinearLayout.HORIZONTAL
         authorLayout.gravity = Gravity.CENTER_VERTICAL
-        authorLayout.setPadding(50, 50, 50, 50)
+        authorLayout.setPadding(50, 25, 50, 50)
 
         // Create ImageView for profile icon
         val profileIcon = ImageView(context)
@@ -227,7 +258,7 @@ class Tab3Fragment : Fragment() {
         val authorTextView = TextView(context)
         authorTextView.text = contact.name
         authorTextView.textSize = 15f
-        authorTextView.setPadding(16, 0, 0, 0) // Adjust padding as needed
+        authorTextView.setPadding(16, 0, 20, 0) // Adjust padding as needed
         authorTextView.setOnClickListener {
             showContactDialog(contact)
         }
@@ -237,16 +268,8 @@ class Tab3Fragment : Fragment() {
         mainLayout.addView(authorLayout)
 
         // Create TextView for writing text
-        val textView = TextView(context)
-        textView.text = writing.text
-        textView.textSize = 25f
-        textView.setPadding(100, 16, 100, 50) // Padding for writing text
 
-        // Set TextView to be not clickable and focusable
-        textView.isClickable = false
-        textView.isFocusable = false
 
-        mainLayout.addView(textView)
 
         // Create LinearLayout to hold the heart button
         val heartButtonLayout = LinearLayout(context)
@@ -282,10 +305,10 @@ class Tab3Fragment : Fragment() {
         }
 
         // Add heart button to heartButtonLayout
-        heartButtonLayout.addView(heartButton)
+        authorLayout.addView(heartButton)
 
         // Add heartButtonLayout to mainLayout
-        mainLayout.addView(heartButtonLayout)
+        //mainLayout.addView(heartButtonLayout)
 
         return mainLayout
     }

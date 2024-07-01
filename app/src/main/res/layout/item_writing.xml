@@ -1,31 +1,74 @@
+<!-- writing_item_layout.xml -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="16dp"
-    android:background="@drawable/background_rounded_gray">
+    android:padding="8dp"
+    android:layout_margin="8dp"
+    android:background="@drawable/outer_box_background">
 
-    <ImageView
-        android:id="@+id/person_icon"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:layout_marginEnd="8dp"
-        android:contentDescription="@string/profile_icon_description"
-        android:src="@drawable/ic_person"/> <!-- Use the single ic_person drawable -->
-
-    <TextView
-        android:id="@+id/author_text_view"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="30sp"
-        android:textStyle="bold"
-        android:padding="8dp"/>
+        android:orientation="vertical"
+        android:background="@drawable/background_rounded_gray"
+        android:padding="16dp">
 
-    <TextView
-        android:id="@+id/text_view"
+        <TextView
+            android:id="@+id/text_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:text="Writing Text"
+            android:paddingTop="8dp"
+            android:paddingBottom="16dp"/>
+
+    </LinearLayout>
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="20sp"
-        android:padding="8dp"/>
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingStart="16dp"
+        android:paddingTop="8dp"
+        android:paddingEnd="16dp"
+        android:paddingBottom="8dp">
+
+        <ImageView
+            android:id="@+id/person_icon"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginEnd="8dp"
+            android:contentDescription="@string/profile_icon_description"
+            android:src="@drawable/ic_person"/>
+
+        <TextView
+            android:id="@+id/author_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:text="Author Name"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="end"
+        android:paddingTop="8dp"
+        android:paddingEnd="16dp"
+        android:paddingBottom="8dp">
+
+        <ImageButton
+            android:id="@+id/heart_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_heart_unliked"
+            android:background="?attr/selectableItemBackground"
+            android:contentDescription="@string/heart_button_description"/>
+
+    </LinearLayout>
 
 </LinearLayout>
