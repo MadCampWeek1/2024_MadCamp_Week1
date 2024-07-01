@@ -1,0 +1,14 @@
+<!-- outer_box_background.xml -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+
+    <!-- Outer box background color -->
+    <solid android:color="#FFFFFF"/> <!-- Adjust color as needed -->
+
+    <!-- Outer box corner radius -->
+    <corners android:radius="8dp"/> <!-- Adjust radius as needed -->
+
+    <!-- Outer box border -->
+
+
+</shape>
