@@ -35,6 +35,11 @@ class Tab3Fragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val heartButton = view.findViewById<ImageButton>(R.id.btn_heart)
+        heartButton.setOnClickListener {
+            findNavController().navigate(R.id.action_tab3Fragment_to_likedWritingsFragment)
+        }
+
         writingsContainer = view.findViewById(R.id.writings_container)
 
         view.findViewById<View>(R.id.fab_add).setOnClickListener {
