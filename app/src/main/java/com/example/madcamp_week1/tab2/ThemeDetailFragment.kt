@@ -2,7 +2,6 @@ package com.example.madcamp_week1
 
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.Toolbar
@@ -27,7 +26,9 @@ class ThemeDetailFragment : Fragment() {
 
         // Retrieve the images from arguments
         val themeImages = arguments?.getIntArray("themeImages")?.toList() ?: emptyList()
-        imageAdapter = ImageAdapter(requireContext(), themeImages)
+        imageAdapter = ImageAdapter(requireContext(), themeImages) { imageResId ->
+            onImageClicked(imageResId)
+        }
         recyclerView.adapter = imageAdapter
 
         // Setup toolbar
@@ -39,5 +40,12 @@ class ThemeDetailFragment : Fragment() {
         }
 
         return view
+    }
+
+    private fun onImageClicked(imageResId: Int) {
+        val bundle = Bundle().apply {
+            putInt("imageResId", imageResId)
+        }
+        findNavController().navigate(R.id.action_themeDetailFragment_to_imageDetailFragment, bundle)
     }
 }

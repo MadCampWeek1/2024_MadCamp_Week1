@@ -140,7 +140,7 @@ class Tab3Fragment : Fragment() {
         populateWritings(contactList, writingsContainer)
     }
 
-    fun readContactsFromJson(context: Context): List<Contact> {
+    private fun readContactsFromJson(context: Context): List<Contact> {
         val contacts = mutableListOf<Contact>()
         val gson = Gson()
         try {
