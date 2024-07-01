@@ -5,10 +5,21 @@
     android:padding="16dp"
     android:background="@color/popupBackground">
 
+    <ImageButton
+        android:id="@+id/btn_close"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="16dp"
+        android:background="?attr/selectableItemBackground"
+        android:src="@drawable/ic_close"
+        android:contentDescription="@string/close_button_description" />
+
     <ScrollView
         android:id="@+id/contact_scrollview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/btn_close"
         android:layout_above="@id/send_message_button">
 
         <LinearLayout
