@@ -11,13 +11,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.fragment.app.Fragment
-import androidx.navigation.Navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.fragment_geul.*
 import java.io.*
+
 
 class Tab3Fragment : Fragment() {
 
@@ -175,8 +175,6 @@ class Tab3Fragment : Fragment() {
         return contacts
     }
 
-
-
     private fun populateWritings(contactList: List<Contact>, container: LinearLayout) {
         container.removeAllViews() // Clear the container before populating
         for (contact in contactList) {
@@ -187,7 +185,6 @@ class Tab3Fragment : Fragment() {
             }
         }
     }
-
 
     private fun createWritingView(contact: Contact, writing: Writing): View {
         val context = requireContext()
@@ -310,7 +307,6 @@ class Tab3Fragment : Fragment() {
         }
     }
 
-
     private fun loadLikedState(contact: Contact) {
         val prefs = requireContext().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
         val gson = Gson()
@@ -337,17 +333,23 @@ class Tab3Fragment : Fragment() {
         val contactImageView: ImageView = dialogView.findViewById(R.id.contact_image)
         val contactNameTextView: TextView = dialogView.findViewById(R.id.contact_name)
         val contactPhoneTextView: TextView = dialogView.findViewById(R.id.contact_phone)
+        val contactGenderTextView: TextView = dialogView.findViewById(R.id.contact_gender)
+        val contactAgeTextView: TextView = dialogView.findViewById(R.id.contact_age)
+        val contactIntroductionTextView: TextView = dialogView.findViewById(R.id.contact_introduction)
         val sendMessageButton: Button = dialogView.findViewById(R.id.send_message_button)
 
         // Load contact image using Glide
         Glide.with(requireContext())
             .load(contact.profileImage)
             .placeholder(R.drawable.ic_contact_placeholder)
-            .error(R.drawable.ic_contact_placeholder) // Add error placeholder
+            .error(R.drawable.ic_contact_placeholder)
             .into(contactImageView)
 
         contactNameTextView.text = contact.name
         contactPhoneTextView.text = contact.phone
+        contactGenderTextView.text = "Gender: ${contact.gender}"
+        contactAgeTextView.text = "Age: ${contact.age?.toString()}"
+        contactIntroductionTextView.text = contact.introduction
 
         // Set button click listener
         sendMessageButton.setOnClickListener {
@@ -364,7 +366,7 @@ class Tab3Fragment : Fragment() {
             val metrics = DisplayMetrics()
             window.windowManager.defaultDisplay.getMetrics(metrics)
             val width = (metrics.widthPixels * 0.8).toInt()
-            val height = (metrics.heightPixels * 0.45).toInt()
+            val height = (metrics.heightPixels * 0.5).toInt()
             window.setLayout(width, height)
 
             // Set button width to match 80% of dialog width
@@ -377,9 +379,3 @@ class Tab3Fragment : Fragment() {
         }
     }
 }
-
-data class Writing(
-    val text: String,
-    var isLiked: Boolean = false, // Default is unliked
-    var likeNum: Int = 0
-)

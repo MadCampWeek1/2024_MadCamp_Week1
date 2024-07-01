@@ -17,6 +17,12 @@ class Tab2Fragment : Fragment() {
     }
 }
 
+data class Writing(
+    val text: String,
+    var isLiked: Boolean = false,
+    var likeNum: Int = 0
+)
+
 data class Contact(
     val name: String,
     val phone: String,
