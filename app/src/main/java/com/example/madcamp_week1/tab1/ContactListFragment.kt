@@ -6,9 +6,11 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.os.Bundle
 import android.util.Log
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -80,8 +82,15 @@ class ContactListFragment : Fragment() {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val position = viewHolder.adapterPosition
                 val deletedContact = contactAdapter.contactList[position]
-                removeContact(deletedContact)
-                Log.d("ContactListFragment", "Contact deleted: $deletedContact")
+                if (!deletedContact.owner) {
+                    removeContact(deletedContact)
+                    Toast.makeText(context, "Deleted successfully", Toast.LENGTH_SHORT).show()
+                    Log.d("ContactListFragment", "Contact deleted: $deletedContact")
+                } else {
+                    // If contact is owner, show a toast message and reset the swipe
+                    Toast.makeText(context, "Can't delete your information", Toast.LENGTH_SHORT).show()
+                    contactAdapter.notifyItemChanged(position)
+                }
             }
 
             override fun onChildDraw(

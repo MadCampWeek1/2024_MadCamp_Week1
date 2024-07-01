@@ -1,8 +1,8 @@
 [
   {
-    "name": "THISISOWNER",
+    "name": "YOU",
     "phone": "123-456-7890",
-    "profileImage": "https://c.files.bbci.co.uk/DCE1/production/_104454565_mary-mcgowan_caught-in-the-act_00001294.jpg",
+    "profileImage": "https://cdn.hankyung.com/photo/201904/01.19372617.1.jpg",
     "writing": [
       {
         "text": "writing is best",
@@ -22,14 +22,14 @@
     ],
     "isPendingDelete": false,
     "owner": true,
-    "gender": "Male",
-    "age": 35,
+    "gender": "Female",
+    "age": 34,
     "introduction": "I am the owner and I love writing and pizza."
   },
   {
     "name": "Jane Smith",
     "phone": "987-654-3210",
-    "profileImage": "https://c.files.bbci.co.uk/DCE1/production/_104454565_mary-mcgowan_caught-in-the-act_00001294.jpg",
+    "profileImage": "",
 
     "writing": [
       {
@@ -62,7 +62,7 @@
   {
     "name": "John Doe",
     "phone": "123-456-7890",
-    "profileImage": "https://c.files.bbci.co.uk/DCE1/production/_104454565_mary-mcgowan_caught-in-the-act_00001294.jpg",
+    "profileImage": "",
 
     "writing": [
       {
@@ -85,7 +85,7 @@
   {
     "name": "Jane Smith",
     "phone": "987-654-3210",
-    "profileImage": "https://c.files.bbci.co.uk/DCE1/production/_104454565_mary-mcgowan_caught-in-the-act_00001294.jpg",
+    "profileImage": "",
     "writing": [
       {
         "text": "dog",
@@ -117,7 +117,7 @@
   {
     "name": "John Doe",
     "phone": "123-456-7890",
-    "profileImage": "https://c.files.bbci.co.uk/DCE1/production/_104454565_mary-mcgowan_caught-in-the-act_00001294.jpg",
+    "profileImage": "",
     "writing": [
       {
         "text": "shake my hands",
@@ -131,7 +131,7 @@
   {
     "name": "Jane Smith",
     "phone": "987-654-3210",
-    "profileImage": "https://c.files.bbci.co.uk/DCE1/production/_104454565_mary-mcgowan_caught-in-the-act_00001294.jpg",
+    "profileImage": "",
     "writing": [
       {
         "text": "hello",
@@ -148,7 +148,7 @@
   {
     "name": "John Doe",
     "phone": "123-456-7890",
-    "profileImage": "https://c.files.bbci.co.uk/DCE1/production/_104454565_mary-mcgowan_caught-in-the-act_00001294.jpg",
+    "profileImage": "",
     "writing": [
       {
         "text": "say hi",
@@ -165,7 +165,7 @@
   {
     "name": "Jane Smith",
     "phone": "987-654-3210",
-    "profileImage": "https://c.files.bbci.co.uk/DCE1/production/_104454565_mary-mcgowan_caught-in-the-act_00001294.jpg",
+    "profileImage": "",
     "writing": [
       {
         "text": "abcdef",
@@ -187,7 +187,7 @@
   {
     "name": "Jane Smith",
     "phone": "987-654-3210",
-    "profileImage": "https://c.files.bbci.co.uk/DCE1/production/_104454565_mary-mcgowan_caught-in-the-act_00001294.jpg",
+    "profileImage": "",
     "writing": [
       {
         "text": "open the window",
@@ -209,7 +209,7 @@
   {
     "name": "Jane Smith",
     "phone": "987-654-3210",
-    "profileImage": "https://c.files.bbci.co.uk/DCE1/production/_104454565_mary-mcgowan_caught-in-the-act_00001294.jpg",
+    "profileImage": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTHlL60RJdr02gFuAiIpt5QAd3kDN7KvGk4MQ&s",
     "writing": [
       {
         "text": "anything",
