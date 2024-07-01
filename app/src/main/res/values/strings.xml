@@ -3,4 +3,6 @@
     <string name="profile_icon_description">Profile Icon</string>
     <string name="back_button">Back</string>
     <string name="heart_button_description">Heart Icon</string>
+    <string name="delete_button_description">Delete</string>
+    <string name="close_button_description">Close</string>
 </resources>

@@ -2,17 +2,21 @@ package com.example.madcamp_week1
 
 import android.app.Dialog
 import android.content.Context
+import android.os.Bundle
 import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.madcamp_week1.viewmodel.ContactViewModel
+import com.google.gson.Gson
 
 class ContactAdapter(
     private val context: Context,
@@ -38,7 +42,7 @@ class ContactAdapter(
         holder.deleteImageView.visibility = if (currentContact.isPendingDelete) View.VISIBLE else View.GONE
 
         holder.itemView.setOnClickListener {
-            showContactDialog(currentContact)
+            showContactDialog(currentContact, holder.itemView)
         }
 
         holder.deleteImageView.setOnClickListener {
@@ -56,7 +60,7 @@ class ContactAdapter(
         notifyDataSetChanged()
     }
 
-    private fun showContactDialog(contact: Contact) {
+    private fun showContactDialog(contact: Contact, itemView: View) {
         val dialog = Dialog(context)
         val inflater = LayoutInflater.from(context)
         val dialogView = inflater.inflate(R.layout.dialog_contact_info, null)
@@ -68,6 +72,7 @@ class ContactAdapter(
         val contactAgeTextView: TextView = dialogView.findViewById(R.id.contact_age)
         val contactIntroductionTextView: TextView = dialogView.findViewById(R.id.contact_introduction)
         val sendMessageButton: Button = dialogView.findViewById(R.id.send_message_button)
+        val closeButton: ImageButton = dialogView.findViewById(R.id.btn_close)
 
         // Load contact image using Glide
         Glide.with(context)
@@ -84,8 +89,18 @@ class ContactAdapter(
 
         // Set button click listener
         sendMessageButton.setOnClickListener {
-            Toast.makeText(context, "Message sent to ${contact.name}", Toast.LENGTH_SHORT).show()
-            // Perform any additional actions here
+            dialog.dismiss()
+            val contactJson = Gson().toJson(contact)
+            val bundle = Bundle().apply {
+                putString("contact", contactJson)
+                putString("contactName", contact.name)  // Pass the contact name
+            }
+            itemView.findNavController().navigate(R.id.action_contactListFragment_to_contactWritingsFragment, bundle)
+        }
+
+        // Set close button click listener
+        closeButton.setOnClickListener {
+            dialog.dismiss()
         }
 
         dialog.setContentView(dialogView)

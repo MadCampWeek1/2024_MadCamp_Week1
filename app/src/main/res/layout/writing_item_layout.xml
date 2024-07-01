@@ -1,0 +1,38 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="8dp"
+    android:layout_margin="8dp"
+    android:background="@drawable/outer_box_background">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/background_rounded_gray"
+        android:padding="24dp"
+        android:layout_margin="16dp">
+
+        <TextView
+            android:id="@+id/text_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:fontFamily="@font/roboto_regular"
+            android:text="Writing Text"
+            android:paddingTop="8dp"
+            android:paddingBottom="16dp"/>
+
+        <ImageButton
+            android:id="@+id/heart_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_heart_unliked"
+            android:background="?attr/selectableItemBackground"
+            android:contentDescription="@string/heart_button_description"
+            android:layout_gravity="end"
+            android:padding="8dp" />
+
+    </LinearLayout>
+</LinearLayout>
