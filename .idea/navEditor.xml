@@ -13,6 +13,11 @@
                       <LayoutPositions />
                     </value>
                   </entry>
+                  <entry key="action_tab3Fragment_to_likedWritingsFragment">
+                    <value>
+                      <LayoutPositions />
+                    </value>
+                  </entry>
                   <entry key="addWritingFragment">
                     <value>
                       <LayoutPositions>
@@ -58,9 +63,19 @@
                       </LayoutPositions>
                     </value>
                   </entry>
-
+                  <entry key="imageDetailFragment">
+                    <value>
+                      <LayoutPositions>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="12" />
+                            <option name="y" value="12" />
+                          </Point>
+                        </option>
+                      </LayoutPositions>
+                    </value>
+                  </entry>
                   <entry key="likedWritingsFragment">
-
                     <value>
                       <LayoutPositions>
                         <option name="myPosition">
