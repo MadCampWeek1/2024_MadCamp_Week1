@@ -11,8 +11,8 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:background="@drawable/background_rounded_gray"
-        android:padding="24dp"
-        android:layout_margin="16dp">
+        android:padding="16dp"
+        android:layout_margin="10dp">
 
         <TextView
             android:id="@+id/text_view"

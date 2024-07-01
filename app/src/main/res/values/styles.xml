@@ -17,5 +17,21 @@
         <item name="android:textSize">18sp</item>
     </style>
 
+    <!-- Custom toolbar style -->
+    <style name="ToolbarTitleText" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="fontFamily">@font/instagram_font</item>
+        <item name="android:textColor">@color/indigo_700</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+    <style name="CustomToolbar" parent="Widget.MaterialComponents.Toolbar">
+        <item name="android:titleTextAppearance">@style/ToolbarTitleText</item>
+    </style>
+
+    <!-- Theme with no ActionBar -->
+    <style name="AppTheme.NoActionBar" parent="Theme.MadCamp_Week1">
+        <item name="windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
+
 </resources>
 

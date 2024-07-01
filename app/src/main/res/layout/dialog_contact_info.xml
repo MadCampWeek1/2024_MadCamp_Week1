@@ -48,7 +48,6 @@
                         android:id="@+id/contact_image"
                         android:layout_width="150dp"
                         android:layout_height="150dp"
-                        android:layout_gravity="center"
                         android:src="@drawable/ic_contact_placeholder"
                         android:contentDescription="Contact Image"/>
                 </FrameLayout>

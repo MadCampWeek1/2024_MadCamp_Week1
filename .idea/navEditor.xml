@@ -13,14 +13,29 @@
                       <LayoutPositions />
                     </value>
                   </entry>
-
+                  <entry key="action_contactListFragment_to_contactWritingsFragment">
+                    <value>
+                      <LayoutPositions />
+                    </value>
+                  </entry>
                   <entry key="action_tab3Fragment_to_likedWritingsFragment">
-
                     <value>
                       <LayoutPositions />
                     </value>
                   </entry>
                   <entry key="addWritingFragment">
+                    <value>
+                      <LayoutPositions>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="12" />
+                            <option name="y" value="12" />
+                          </Point>
+                        </option>
+                      </LayoutPositions>
+                    </value>
+                  </entry>
+                  <entry key="contactWritingsFragment">
                     <value>
                       <LayoutPositions>
                         <option name="myPosition">
@@ -77,9 +92,7 @@
                       </LayoutPositions>
                     </value>
                   </entry>
-
                   <entry key="likedWritingsFragment">
-
                     <value>
                       <LayoutPositions>
                         <option name="myPosition">
