@@ -1,18 +1,29 @@
 package com.example.madcamp_week1
 
+import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
+import android.util.DisplayMetrics
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.bumptech.glide.Glide
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
+import java.io.BufferedReader
+import java.io.File
+import java.io.FileInputStream
+import java.io.InputStreamReader
 
 class ContactWritingsFragment : Fragment() {
 
@@ -26,7 +37,6 @@ class ContactWritingsFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_writings, container, false)
         writingsContainer = view.findViewById(R.id.writings_container)
 
-        // Set the toolbar title to the contact's name and handle the back button
         val toolbar = view.findViewById<MaterialToolbar>(R.id.topAppBar3)
         val contactName = arguments?.getString("contactName")
         toolbar.title = contactName
@@ -44,20 +54,26 @@ class ContactWritingsFragment : Fragment() {
         val contactJson = arguments?.getString("contact")
         contact = Gson().fromJson(contactJson, Contact::class.java)
 
-        contact?.let { populateWritings(it.writing) }
+        contact?.let {
+            // Load liked state from JSON file
+            loadLikedStateFromJson()
+            populateWritings(it.writing, it)
+        }
     }
 
-    private fun populateWritings(writings: List<Writing>) {
+    private fun populateWritings(writings: List<Writing>, contact: Contact) {
         writingsContainer.removeAllViews()
         for (writing in writings) {
             val itemView = LayoutInflater.from(context).inflate(R.layout.writing_item_layout, writingsContainer, false)
             val textView = itemView.findViewById<TextView>(R.id.text_view)
             val heartButton = itemView.findViewById<ImageButton>(R.id.heart_button)
+            val authorLayout = itemView.findViewById<LinearLayout>(R.id.author_layout)
+            val profileImageView = itemView.findViewById<ImageView>(R.id.person_icon)
+            val authorTextView = itemView.findViewById<TextView>(R.id.author_text_view)
 
             textView.text = writing.text
             textView.textSize = 18f
 
-            // Use ResourcesCompat to get the font
             val font = ResourcesCompat.getFont(requireContext(), R.font.roboto_regular)
             textView.typeface = font
 
@@ -72,57 +88,157 @@ class ContactWritingsFragment : Fragment() {
                     if (isLiked) R.drawable.ic_heart_liked else R.drawable.ic_heart_unliked
                 )
                 writing.isLiked = isLiked
-                saveLikedState(contact!!, writing)
+                saveLikedStateToJson(contact, writing)
+            }
+
+            Glide.with(this)
+                .load(contact.profileImage)
+                .placeholder(R.drawable.ic_person)
+                .into(profileImageView)
+
+            authorTextView.text = contact.name
+            authorLayout.setOnClickListener {
+                showContactDialog(contact)
             }
 
             writingsContainer.addView(itemView)
         }
     }
 
-    private fun saveLikedState(contact: Contact, writing: Writing) {
-        val prefs = requireContext().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
-        val editor = prefs.edit()
+    private fun saveLikedStateToJson(contact: Contact, writing: Writing) {
+        val gson = Gson()
+        val context = requireContext()
 
-        // Find the index of the writing in the contact's list
-        val index = contact.writing.indexOfFirst { it.text == writing.text }
-        if (index != -1) {
-            // Update the writing object in the list
-            contact.writing[index] = writing
+        try {
+            val filename = "contact.json"
+            val file = File(context.filesDir, filename)
 
-            // Serialize the contact object to JSON
-            val gson = Gson()
-            val json = gson.toJson(contact)
+            val contactList: MutableList<Contact> = if (file.exists()) {
+                val inputStream = FileInputStream(file)
+                val reader = BufferedReader(InputStreamReader(inputStream))
+                val jsonStringBuilder = StringBuilder()
+                var line: String?
+                while (reader.readLine().also { line = it } != null) {
+                    jsonStringBuilder.append(line)
+                }
+                reader.close()
+                gson.fromJson(jsonStringBuilder.toString(), object : TypeToken<MutableList<Contact>>() {}.type)
+            } else {
+                mutableListOf()
+            }
 
-            // Save the JSON string to SharedPreferences using the contact's name as key
-            editor.putString(contact.name, json)
-            editor.apply()
+            val contactIndex = contactList.indexOfFirst { it.name == contact.name }
+            if (contactIndex != -1) {
+                val contactToUpdate = contactList[contactIndex]
+                val writingIndex = contactToUpdate.writing.indexOfFirst { it.text == writing.text }
+                if (writingIndex != -1) {
+                    contactToUpdate.writing[writingIndex] = writing
+                }
+            }
+
+            val json = gson.toJson(contactList)
+            context.openFileOutput(filename, Context.MODE_PRIVATE).use {
+                it.write(json.toByteArray())
+            }
+
+        } catch (e: Exception) {
+            Log.e("ContactWritingsFragment", "Error saving liked state: ${e.message}")
         }
     }
 
-    private fun saveContact(contact: Contact) {
-        val prefs = requireContext().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
-        val editor = prefs.edit()
+    private fun loadLikedStateFromJson() {
         val gson = Gson()
-        val json = gson.toJson(contact)
-        editor.putString(contact.name, json)
-        editor.apply()
+        val context = requireContext()
+
+        try {
+            val filename = "contact.json"
+            val file = File(context.filesDir, filename)
+
+            if (file.exists()) {
+                val inputStream = FileInputStream(file)
+                val reader = BufferedReader(InputStreamReader(inputStream))
+                val jsonStringBuilder = StringBuilder()
+                var line: String?
+                while (reader.readLine().also { line = it } != null) {
+                    jsonStringBuilder.append(line)
+                }
+                reader.close()
+
+                val contactList: List<Contact> = gson.fromJson(jsonStringBuilder.toString(), object : TypeToken<List<Contact>>() {}.type)
+                contactList.forEach { savedContact ->
+                    if (savedContact.name == contact?.name) {
+                        contact?.writing?.forEach { writing ->
+                            val savedWriting = savedContact.writing.find { it.text == writing.text }
+                            if (savedWriting != null) {
+                                writing.isLiked = savedWriting.isLiked
+                                writing.likeNum = savedWriting.likeNum
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (e: Exception) {
+            Log.e("ContactWritingsFragment", "Error loading liked state: ${e.message}")
+        }
     }
 
-    private fun loadLikedState(contact: Contact) {
-        val prefs = requireContext().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
-        val gson = Gson()
-        val json = prefs.getString(contact.name, null)
+    private fun showContactDialog(contact: Contact) {
+        val dialog = Dialog(requireContext())
+        val inflater = LayoutInflater.from(requireContext())
+        val dialogView = inflater.inflate(R.layout.dialog_contact_info, null)
 
-        if (json != null) {
-            // Deserialize JSON to Contact object
-            val savedContact = gson.fromJson(json, Contact::class.java)
+        val contactImageView: ImageView = dialogView.findViewById(R.id.contact_image)
+        val contactNameTextView: TextView = dialogView.findViewById(R.id.contact_name)
+        val contactPhoneTextView: TextView = dialogView.findViewById(R.id.contact_phone)
+        val contactGenderTextView: TextView = dialogView.findViewById(R.id.contact_gender)
+        val contactAgeTextView: TextView = dialogView.findViewById(R.id.contact_age)
+        val contactIntroductionTextView: TextView = dialogView.findViewById(R.id.contact_introduction)
+        val sendMessageButton: Button = dialogView.findViewById(R.id.send_message_button)
+        val closeButton: ImageButton = dialogView.findViewById(R.id.btn_close) // Add this line
 
-            // Update each writing's liked state based on savedContact
-            for (savedWriting in savedContact.writing) {
-                val writing = contact.writing.find { it.text == savedWriting.text }
-                writing?.isLiked = savedWriting.isLiked
-                writing?.likeNum = savedWriting.likeNum
+        Glide.with(requireContext())
+            .load(contact.profileImage)
+            .placeholder(R.drawable.ic_contact_placeholder)
+            .error(R.drawable.ic_contact_placeholder)
+            .into(contactImageView)
+
+        contactNameTextView.text = contact.name
+        contactPhoneTextView.text = contact.phone
+        contactGenderTextView.text = "Gender: ${contact.gender}"
+        contactAgeTextView.text = "Age: ${contact.age?.toString()}"
+        contactIntroductionTextView.text = contact.introduction
+
+        sendMessageButton.setOnClickListener {
+            val bundle = Bundle().apply {
+                putString("contactName", contact.name)
+                putString("contact", Gson().toJson(contact))
+            }
+            findNavController().navigate(R.id.action_contactListFragment_to_contactWritingsFragment, bundle)
+            dialog.dismiss()
+        }
+
+        closeButton.setOnClickListener { // Add this block
+            dialog.dismiss()
+        }
+
+        dialog.setContentView(dialogView)
+        dialog.show()
+
+        val window = dialog.window
+        if (window != null) {
+            val metrics = DisplayMetrics()
+            window.windowManager.defaultDisplay.getMetrics(metrics)
+            val width = (metrics.widthPixels * 0.8).toInt()
+            val height = (metrics.heightPixels * 0.5).toInt()
+            window.setLayout(width, height)
+
+            val buttonWidth = (width * 0.7).toInt()
+            sendMessageButton.post {
+                val layoutParams = sendMessageButton.layoutParams
+                layoutParams.width = buttonWidth
+                sendMessageButton.layoutParams = layoutParams
             }
         }
     }
+
 }

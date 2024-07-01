@@ -44,9 +44,6 @@
         <action
             android:id="@+id/action_tab3Fragment_to_addWritingFragment"
             app:destination="@id/addWritingFragment" />
-        <action
-            android:id="@+id/action_tab3Fragment_to_likedWritingsFragment"
-            app:destination="@id/likedWritingsFragment" />
         <argument
             android:name="newWriting"
             app:argType="string" />
@@ -74,14 +71,5 @@
         android:id="@+id/action_contactListFragment_to_contactWritingsFragment"
         app:destination="@id/contactWritingsFragment" />
 
-    <fragment
-        android:id="@+id/likedWritingsFragment"
-        android:name="com.example.madcamp_week1.LikedWritingsFragment"
-        android:label="LikedWritingsFragment"
-        tools:layout="@layout/liked_writings" />
-
-    <action
-        android:id="@+id/action_tab3Fragment_to_likedWritingsFragment"
-        app:destination="@id/notificationsFragment" />
 
 </navigation>
