@@ -93,6 +93,20 @@ class ContactListFragment : Fragment() {
                 }
             }
 
+            override fun getSwipeDirs(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder
+            ): Int {
+                val position = viewHolder.adapterPosition
+                val contact = contactAdapter.contactList[position]
+
+                return if (contact.owner) {
+                    0 // Disable swipe for owner's contact
+                } else {
+                    super.getSwipeDirs(recyclerView, viewHolder)
+                }
+            }
+
             override fun onChildDraw(
                 c: Canvas,
                 recyclerView: RecyclerView,

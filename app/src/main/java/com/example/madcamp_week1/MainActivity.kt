@@ -17,12 +17,10 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         // Set up Toolbar
-        val toolbar = findViewById<MaterialToolbar>(R.id.topAppBar1)
+        val toolbar = findViewById<MaterialToolbar>(R.id.topAppBar2)
         setSupportActionBar(toolbar)
 
-        val toolbar3 = findViewById<MaterialToolbar>(R.id.topAppBar3)
-        setSupportActionBar(toolbar3)
-
+        // Set up Navigation
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.navController
 

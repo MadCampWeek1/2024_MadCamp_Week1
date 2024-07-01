@@ -8,11 +8,12 @@
         android:id="@+id/topAppBar3"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary"
-        android:elevation="4dp"
+        android:background="@color/white"
+        android:elevation="0dp"
         android:layout_alignParentTop="true"
         app:title="SnapGeul"
-        app:titleTextColor="@android:color/white" >
+        app:titleTextAppearance="@style/ToolbarTitleText"
+        app:titleTextColor="@color/indigo_700" >
 
         <ImageButton
             android:id="@+id/btn_heart"

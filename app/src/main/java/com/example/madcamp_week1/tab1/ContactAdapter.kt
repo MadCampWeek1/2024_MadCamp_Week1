@@ -28,6 +28,39 @@ class ContactAdapter(
         val nameTextView: TextView = itemView.findViewById(R.id.contact_name)
         val phoneTextView: TextView = itemView.findViewById(R.id.contact_phone)
         val deleteImageView: ImageView = itemView.findViewById(R.id.contact_delete)
+
+        val profileImage: ImageView = itemView.findViewById(R.id.contact_image)
+        val ownerTextView: TextView = itemView.findViewById(R.id.text_owner)
+
+        fun bind(contact: Contact) {
+            nameTextView.text = contact.name
+            phoneTextView.text = contact.phone
+
+            if (contact.owner) {
+                ownerTextView.visibility = View.VISIBLE
+                // Set profile image visibility and load image if it's an owner
+                profileImage.visibility = View.VISIBLE
+                Glide.with(itemView.context)
+                    .load(contact.profileImage) // Assuming profileImage is a URL or path
+                    .placeholder(R.drawable.ic_contact_placeholder) // Placeholder image while loading
+                    .error(R.drawable.ic_contact_placeholder) // Image to show if loading fails
+                    .into(profileImage)
+
+            } else {
+                ownerTextView.visibility = View.GONE
+                // Hide profile image for non-owners
+                profileImage.visibility = View.GONE
+            }
+            deleteImageView.visibility = if (contact.isPendingDelete) View.VISIBLE else View.GONE
+
+            itemView.setOnClickListener {
+                // Handle click action if needed
+            }
+
+            deleteImageView.setOnClickListener {
+                // Handle delete action if needed
+            }
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ContactViewHolder {
@@ -37,6 +70,8 @@ class ContactAdapter(
 
     override fun onBindViewHolder(holder: ContactViewHolder, position: Int) {
         val currentContact = contactList[position]
+        val contact = contactList[position]
+        holder.bind(contact)
         holder.nameTextView.text = currentContact.name
         holder.phoneTextView.text = currentContact.phone
         holder.deleteImageView.visibility = if (currentContact.isPendingDelete) View.VISIBLE else View.GONE
