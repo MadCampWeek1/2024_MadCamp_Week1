@@ -219,6 +219,7 @@ class Tab3Fragment : Fragment() {
     private fun createWritingView(contact: Contact?, writing: Writing): View {
         val context = requireContext()
 
+        // Main layout for the entire writing view
         val mainLayout = LinearLayout(context)
         val mainLayoutParams = LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.MATCH_PARENT,
@@ -227,8 +228,41 @@ class Tab3Fragment : Fragment() {
         mainLayout.orientation = LinearLayout.VERTICAL
         mainLayout.setBackgroundResource(R.drawable.outer_box_background)
         mainLayout.layoutParams = mainLayoutParams
-        mainLayoutParams.setMargins(0, 10, 0, 0)
+        mainLayoutParams.setMargins(0, 10, 0, 100)
 
+        // Layout for the profile image and author name
+        val authorLayout = LinearLayout(context)
+        authorLayout.layoutParams = LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT
+        )
+        authorLayout.orientation = LinearLayout.HORIZONTAL
+        authorLayout.gravity = Gravity.CENTER_VERTICAL
+        authorLayout.setPadding(30, 25, 50, 10) // Adjust padding as needed
+
+        // Profile image view
+        val profileIcon = ImageView(context)
+        Glide.with(this)
+            .load(contact?.profileImage ?: R.drawable.ic_person) // Use placeholder if no profile image
+            .placeholder(R.drawable.ic_person)
+            .into(profileIcon)
+        profileIcon.layoutParams = LinearLayout.LayoutParams(
+            100,
+            100
+        )
+        profileIcon.scaleType = ImageView.ScaleType.CENTER_CROP
+        authorLayout.addView(profileIcon)
+
+        // Author name text view
+        val authorTextView = TextView(context)
+        authorTextView.text = contact?.name ?: "Unknown Author" // Use default text if no contact
+        authorTextView.textSize = 18f // Adjust text size as needed
+        authorTextView.setPadding(16, 0, 0, 0) // Adjust padding as needed
+        authorLayout.addView(authorTextView)
+
+        mainLayout.addView(authorLayout)
+
+        // Layout for the main content with text and heart button
         val innerLayout = RelativeLayout(context)
         innerLayout.layoutParams = LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.MATCH_PARENT,
@@ -237,19 +271,20 @@ class Tab3Fragment : Fragment() {
         innerLayout.setBackgroundResource(R.drawable.background_rounded_gray)
         innerLayout.setPadding(50, 50, 50, 50)
 
+        // Text view for writing content
         val textView = TextView(context)
         textView.layoutParams = LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.MATCH_PARENT,
             LinearLayout.LayoutParams.WRAP_CONTENT
         )
         textView.text = writing.text
-        textView.setTextSize(23f)
-        textView.setPadding(50, 50, 50, 150)
+        textView.setTextSize(20f)
+        textView.setPadding(0, 0, 0, 150) // Adjust padding as needed
         textView.isClickable = false
         textView.isFocusable = false
-
         innerLayout.addView(textView)
 
+        // Heart button
         val heartButton = ImageButton(context)
         val heartButtonParams = RelativeLayout.LayoutParams(
             RelativeLayout.LayoutParams.WRAP_CONTENT,
@@ -273,41 +308,8 @@ class Tab3Fragment : Fragment() {
         }
 
         innerLayout.addView(heartButton)
+
         mainLayout.addView(innerLayout)
-
-        if (contact != null) {
-            val authorLayout = LinearLayout(context)
-            authorLayout.layoutParams = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-            )
-            authorLayout.orientation = LinearLayout.HORIZONTAL
-            authorLayout.gravity = Gravity.CENTER_VERTICAL
-            authorLayout.setPadding(50, 25, 50, 50)
-
-            val profileIcon = ImageView(context)
-            Glide.with(this)
-                .load(contact.profileImage)
-                .placeholder(R.drawable.ic_person)
-                .into(profileIcon)
-            profileIcon.layoutParams = LinearLayout.LayoutParams(
-                100,
-                100
-            )
-            profileIcon.scaleType = ImageView.ScaleType.CENTER_CROP
-            authorLayout.addView(profileIcon)
-
-            val authorTextView = TextView(context)
-            authorTextView.text = contact.name
-            authorTextView.textSize = 15f
-            authorTextView.setPadding(16, 0, 20, 0)
-            authorTextView.setOnClickListener {
-                showContactDialog(contact)
-            }
-            authorLayout.addView(authorTextView)
-
-            mainLayout.addView(authorLayout)
-        }
 
         return mainLayout
     }

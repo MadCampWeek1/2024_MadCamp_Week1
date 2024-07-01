@@ -13,7 +13,7 @@
         android:background="@color/white"
         android:elevation="0dp"
         android:layout_alignParentTop="true"
-        app:title="SnapGeul"
+        app:title="SnapGeul  "
         app:titleTextAppearance="@style/ToolbarTitleText"
         app:titleTextColor="@color/indigo_700" />
 
@@ -21,7 +21,9 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fillViewport="true">
+        android:fillViewport="true"
+        android:paddingBottom="56dp">
+
 
         <!-- Content below the toolbar inside ScrollView -->
         <LinearLayout
