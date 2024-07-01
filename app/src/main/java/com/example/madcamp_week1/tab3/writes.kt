@@ -142,6 +142,7 @@ class Tab3Fragment : Fragment() {
 
     fun readContactsFromJson(context: Context): List<Contact> {
         val contacts = mutableListOf<Contact>()
+        val gson = Gson()
         try {
             // Construct the file path in internal storage
             val filename = "contact.json"
@@ -159,22 +160,55 @@ class Tab3Fragment : Fragment() {
                 while (reader.readLine().also { line = it } != null) {
                     jsonStringBuilder.append(line)
                 }
-
-                // Parse JSON using Gson
-                val type = object : TypeToken<List<Contact>>() {}.type
-                contacts.addAll(Gson().fromJson(jsonStringBuilder.toString(), type))
-
-                // Close the reader
                 reader.close()
-                Log.d("Tab3Fragment", "Read contacts from internal storage: $contacts")
+
+                if (jsonStringBuilder.isEmpty()) {
+                    // File is empty, read from raw resource
+                    loadContactsFromRawResource(context, contacts)
+                    Log.d("Tab3Fragment", "Loaded contacts from raw resource as internal storage was empty: $contacts")
+                } else {
+                    // Parse JSON using Gson
+                    val type = object : TypeToken<List<Contact>>() {}.type
+                    contacts.addAll(gson.fromJson(jsonStringBuilder.toString(), type))
+                    Log.d("Tab3Fragment", "Loaded contacts from internal storage: $contacts")
+                }
             } else {
-                Log.d("Tab3Fragment", "Contact file does not exist.")
+                // File does not exist, read from raw resource
+                loadContactsFromRawResource(context, contacts)
+                Log.d("Tab3Fragment", "Loaded contacts from raw resource as file did not exist: $contacts")
             }
         } catch (e: Exception) {
             Log.e("Tab3Fragment", "Error reading contacts from JSON: ${e.message}")
         }
         return contacts
     }
+
+    private fun loadContactsFromRawResource(context: Context, contacts: MutableList<Contact>) {
+        val gson = Gson()
+        try {
+            val raw = context.resources.openRawResource(R.raw.contact)
+            val reader = BufferedReader(InputStreamReader(raw))
+            val jsonStringBuilder = StringBuilder()
+            var line: String?
+            while (reader.readLine().also { line = it } != null) {
+                jsonStringBuilder.append(line)
+            }
+            reader.close()
+
+            val type = object : TypeToken<List<Contact>>() {}.type
+            contacts.addAll(gson.fromJson(jsonStringBuilder.toString(), type))
+
+            // Save the loaded contacts to internal storage
+            val filename = "contact.json"
+            val json = gson.toJson(contacts)
+            context.openFileOutput(filename, Context.MODE_PRIVATE).use {
+                it.write(json.toByteArray())
+            }
+        } catch (e: Exception) {
+            Log.e("Tab3Fragment", "Error loading contacts from raw resource: ${e.message}")
+        }
+    }
+
 
     private fun populateWritings(contactList: List<Contact>, container: LinearLayout) {
         container.removeAllViews() // Clear the container before populating
@@ -199,21 +233,20 @@ class Tab3Fragment : Fragment() {
         mainLayout.orientation = LinearLayout.VERTICAL
         mainLayout.setBackgroundResource(R.drawable.outer_box_background)
         mainLayout.layoutParams = mainLayoutParams
-        mainLayoutParams.setMargins(0, 10, 0, 50) // Add margins between writings
+        mainLayoutParams.setMargins(0, 10, 0, 0) // Add margins between writings
 
         /*mainLayoutParams.setMargins(5, 10, 5, 40) // Add margins between writings
         mainLayout.layoutParams = mainLayoutParams
         mainLayout.orientation = LinearLayout.VERTICAL
         mainLayout.setBackgroundResource(R.drawable.background_rounded_gray) // Rounded background
 */
-        val innerLayout = LinearLayout(context)
+        val innerLayout = RelativeLayout(context)
         innerLayout.layoutParams = LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.MATCH_PARENT,
             LinearLayout.LayoutParams.WRAP_CONTENT
         )
-        innerLayout.orientation = LinearLayout.VERTICAL
         innerLayout.setBackgroundResource(R.drawable.background_rounded_gray)
-        innerLayout.setPadding(100, 100, 100, 100)
+        innerLayout.setPadding(50, 50, 50, 50)
 
         val textView = TextView(context)
         textView.layoutParams = LinearLayout.LayoutParams(
@@ -222,12 +255,42 @@ class Tab3Fragment : Fragment() {
         )
         textView.text = writing.text
         textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 23f)
-        textView.setPadding(0, 0, 0, 16)
-        innerLayout.addView(textView)
-
+        textView.setPadding(50, 50, 50, 150)
         // Set TextView to be not clickable and focusable
         textView.isClickable = false
         textView.isFocusable = false
+
+        innerLayout.addView(textView)
+
+        // Create heart button
+        val heartButton = ImageButton(context)
+        val heartButtonParams = RelativeLayout.LayoutParams(
+            RelativeLayout.LayoutParams.WRAP_CONTENT,
+            RelativeLayout.LayoutParams.WRAP_CONTENT
+        )
+        heartButtonParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM)
+        heartButtonParams.addRule(RelativeLayout.ALIGN_PARENT_END)
+        heartButton.setImageResource(
+            if (writing.isLiked) R.drawable.ic_heart_liked else R.drawable.ic_heart_unliked
+        )
+        heartButton.setBackgroundResource(android.R.color.transparent) // Make button background transparent
+        heartButton.setPadding(16, 16, 16, 16) // Adjust padding as needed
+        heartButton.layoutParams = heartButtonParams
+
+        var isLiked = writing.isLiked
+
+        heartButton.setOnClickListener {
+            isLiked = !isLiked
+            heartButton.setImageResource(
+                if (isLiked) R.drawable.ic_heart_liked else R.drawable.ic_heart_unliked
+            )
+            writing.isLiked = isLiked
+            saveLikedState(contact, writing)
+        }
+
+        // Add heart button to heartButtonLayout
+        innerLayout.addView(heartButton)
+
 
         mainLayout.addView(innerLayout)
 
@@ -263,46 +326,6 @@ class Tab3Fragment : Fragment() {
 
         // Add authorLayout (profile icon + author name) to mainLayout
         mainLayout.addView(authorLayout)
-
-        // Create TextView for writing text
-
-
-
-        // Create LinearLayout to hold the heart button
-        val heartButtonLayout = LinearLayout(context)
-        heartButtonLayout.layoutParams = LinearLayout.LayoutParams(
-            LinearLayout.LayoutParams.WRAP_CONTENT,
-            LinearLayout.LayoutParams.WRAP_CONTENT
-        )
-        heartButtonLayout.orientation = LinearLayout.HORIZONTAL
-        heartButtonLayout.gravity = Gravity.START
-        heartButtonLayout.setPadding(50, 0, 0, 16) // Padding for heart button
-
-        // Create heart button
-        val heartButton = ImageButton(context)
-        heartButton.setImageResource(
-            if (writing.isLiked) R.drawable.ic_heart_liked else R.drawable.ic_heart_unliked
-        )
-        heartButton.setBackgroundResource(android.R.color.transparent) // Make button background transparent
-        heartButton.setPadding(16, 16, 16, 16) // Adjust padding as needed
-        heartButton.layoutParams = LinearLayout.LayoutParams(
-            LinearLayout.LayoutParams.WRAP_CONTENT,
-            LinearLayout.LayoutParams.WRAP_CONTENT
-        )
-
-        var isLiked = writing.isLiked
-
-        heartButton.setOnClickListener {
-            isLiked = !isLiked
-            heartButton.setImageResource(
-                if (isLiked) R.drawable.ic_heart_liked else R.drawable.ic_heart_unliked
-            )
-            writing.isLiked = isLiked
-            saveLikedState(contact, writing)
-        }
-
-        // Add heart button to heartButtonLayout
-        authorLayout.addView(heartButton)
 
         // Add heartButtonLayout to mainLayout
         //mainLayout.addView(heartButtonLayout)
