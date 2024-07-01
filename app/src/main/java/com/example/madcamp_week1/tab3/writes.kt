@@ -5,40 +5,41 @@ import android.content.Context
 import android.os.Bundle
 import android.util.DisplayMetrics
 import android.util.Log
-import android.util.TypedValue
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.Button
+import android.widget.ImageButton
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.RelativeLayout
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import kotlinx.android.synthetic.main.fragment_geul.*
-import java.io.*
-
+import java.io.BufferedReader
+import java.io.File
+import java.io.FileInputStream
+import java.io.InputStreamReader
 
 class Tab3Fragment : Fragment() {
 
     private lateinit var writingsContainer: LinearLayout
+    private var showingLikedOnly = false
+    private lateinit var contactList: List<Contact>
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_geul, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        val heartButton = view.findViewById<ImageButton>(R.id.btn_heart)
-        heartButton.setOnClickListener {
-            findNavController().navigate(R.id.action_tab3Fragment_to_likedWritingsFragment)
-        }
 
         writingsContainer = view.findViewById(R.id.writings_container)
 
@@ -46,14 +47,41 @@ class Tab3Fragment : Fragment() {
             findNavController().navigate(R.id.action_tab3Fragment_to_addWritingFragment)
         }
 
+        val heartButton = view.findViewById<ImageButton>(R.id.btn_heart)
+        var isHeartLiked = false // 초기 상태 설정
+
+        heartButton.setOnClickListener {
+            // 색상 변경 기능
+            isHeartLiked = !isHeartLiked
+            heartButton.setImageResource(
+                if (isHeartLiked) R.drawable.ic_heart_liked else R.drawable.ic_heart_unliked
+            )
+
+            // 기존 기능 유지
+            showingLikedOnly = !showingLikedOnly
+            if (showingLikedOnly) {
+                val likedWritings = getLikedWritings()
+                populateWritings(likedWritings)
+            } else {
+                populateWritings(contactList.flatMap { it.writing })
+            }
+        }
+
         val args = arguments
         if (args != null && args.containsKey("newWriting")) {
             val newWriting = args.getString("newWriting", "")
             if (!newWriting.isNullOrEmpty()) {
-                // Save the new writing to your data (SharedPreferences or JSON file)
                 saveNewWriting(newWriting)
             }
         }
+
+        contactList = readContactsFromJson(requireContext())
+        populateWritings(contactList.flatMap { it.writing })
+    }
+
+
+    private fun getLikedWritings(): List<Writing> {
+        return contactList.flatMap { it.writing }.filter { it.isLiked }
     }
 
     private fun saveNewWriting(newWriting: String) {
@@ -62,36 +90,24 @@ class Tab3Fragment : Fragment() {
         val gson = Gson()
         val context = requireContext()
 
-        // Ensure context is not null before proceeding
-        context ?: return
-
         try {
-            // Read existing contacts from file
             val filename = "contact.json"
             val file = File(context.filesDir, filename)
 
             val contactList: MutableList<Contact> = if (file.exists()) {
-                // File exists, read its content
                 val inputStream = FileInputStream(file)
                 val reader = BufferedReader(InputStreamReader(inputStream))
-
                 val jsonStringBuilder = StringBuilder()
                 var line: String?
                 while (reader.readLine().also { line = it } != null) {
                     jsonStringBuilder.append(line)
                 }
-
                 reader.close()
                 gson.fromJson(jsonStringBuilder.toString(), object : TypeToken<MutableList<Contact>>() {}.type)
             } else {
-                // File does not exist, create a new list
                 mutableListOf()
             }
 
-            // Log current contact list for debugging
-            Log.d("Tab3Fragment", "Before Adding: $contactList")
-
-            // Find the contact with owner = true and add the new writing
             val ownerContact = contactList.find { it.owner }
             if (ownerContact != null) {
                 ownerContact.writing.add(Writing(newWriting, false, 0))
@@ -99,16 +115,11 @@ class Tab3Fragment : Fragment() {
                 Log.d("Tab3Fragment", "No owner contact found")
             }
 
-            // Write the updated contact list back to JSON file
             val json = gson.toJson(contactList)
             context.openFileOutput(filename, Context.MODE_PRIVATE).use {
                 it.write(json.toByteArray())
             }
 
-            // Log updated contact list for debugging
-            Log.d("Tab3Fragment", "After Adding: $contactList")
-
-            // Log the contact list again after updating for debugging
             logContactList()
 
         } catch (e: Exception) {
@@ -116,13 +127,10 @@ class Tab3Fragment : Fragment() {
         }
     }
 
-
-
     private fun logContactList() {
         val filename = "contact.json"
         val gson = Gson()
 
-        // Construct the file path in internal storage
         val file = File(requireContext().filesDir, filename)
 
         if (file.exists()) {
@@ -130,7 +138,6 @@ class Tab3Fragment : Fragment() {
                 gson.fromJson(it, object : TypeToken<List<Contact>>() {}.type)
             }
 
-            // Log the contact list for debugging
             Log.d("Tab3Fragment", "Contact List: $contactList")
         } else {
             Log.d("Tab3Fragment", "Contact file does not exist.")
@@ -139,27 +146,20 @@ class Tab3Fragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        // Reload data and update UI when fragment resumes
-        val contactList = readContactsFromJson(requireContext())
-        Log.d("Tab3Fragment", "Read from Json: $contactList")
-        populateWritings(contactList, writingsContainer)
+        contactList = readContactsFromJson(requireContext())
+        populateWritings(contactList.flatMap { it.writing })
     }
 
     private fun readContactsFromJson(context: Context): List<Contact> {
         val contacts = mutableListOf<Contact>()
         val gson = Gson()
         try {
-            // Construct the file path in internal storage
             val filename = "contact.json"
             val file = File(context.filesDir, filename)
 
-            // Check if the file exists
             if (file.exists()) {
-                // Open an InputStream to read the file
                 val inputStream = FileInputStream(file)
                 val reader = BufferedReader(InputStreamReader(inputStream))
-
-                // Read the JSON data into a StringBuilder
                 val jsonStringBuilder = StringBuilder()
                 var line: String?
                 while (reader.readLine().also { line = it } != null) {
@@ -167,20 +167,10 @@ class Tab3Fragment : Fragment() {
                 }
                 reader.close()
 
-                if (jsonStringBuilder.isEmpty()) {
-                    // File is empty, read from raw resource
-                    loadContactsFromRawResource(context, contacts)
-                    Log.d("Tab3Fragment", "Loaded contacts from raw resource as internal storage was empty: $contacts")
-                } else {
-                    // Parse JSON using Gson
-                    val type = object : TypeToken<List<Contact>>() {}.type
-                    contacts.addAll(gson.fromJson(jsonStringBuilder.toString(), type))
-                    Log.d("Tab3Fragment", "Loaded contacts from internal storage: $contacts")
-                }
+                val type = object : TypeToken<List<Contact>>() {}.type
+                contacts.addAll(gson.fromJson(jsonStringBuilder.toString(), type))
             } else {
-                // File does not exist, read from raw resource
                 loadContactsFromRawResource(context, contacts)
-                Log.d("Tab3Fragment", "Loaded contacts from raw resource as file did not exist: $contacts")
             }
         } catch (e: Exception) {
             Log.e("Tab3Fragment", "Error reading contacts from JSON: ${e.message}")
@@ -203,7 +193,6 @@ class Tab3Fragment : Fragment() {
             val type = object : TypeToken<List<Contact>>() {}.type
             contacts.addAll(gson.fromJson(jsonStringBuilder.toString(), type))
 
-            // Save the loaded contacts to internal storage
             val filename = "contact.json"
             val json = gson.toJson(contacts)
             context.openFileOutput(filename, Context.MODE_PRIVATE).use {
@@ -214,22 +203,22 @@ class Tab3Fragment : Fragment() {
         }
     }
 
-
-    private fun populateWritings(contactList: List<Contact>, container: LinearLayout) {
-        container.removeAllViews() // Clear the container before populating
-        for (contact in contactList) {
-            for (writing in contact.writing) {
-                loadLikedState(contact) // Load liked state for each writing
-                val writingView = createWritingView(contact, writing)
-                container.addView(writingView)
-            }
+    private fun populateWritings(writings: List<Writing>) {
+        writingsContainer.removeAllViews()
+        for (writing in writings) {
+            val contact = findContactForWriting(writing)
+            val writingView = createWritingView(contact, writing)
+            writingsContainer.addView(writingView)
         }
     }
 
-    private fun createWritingView(contact: Contact, writing: Writing): View {
+    private fun findContactForWriting(writing: Writing): Contact? {
+        return contactList.find { it.writing.contains(writing) }
+    }
+
+    private fun createWritingView(contact: Contact?, writing: Writing): View {
         val context = requireContext()
 
-        // Create a LinearLayout to hold the entire writing item
         val mainLayout = LinearLayout(context)
         val mainLayoutParams = LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.MATCH_PARENT,
@@ -238,13 +227,8 @@ class Tab3Fragment : Fragment() {
         mainLayout.orientation = LinearLayout.VERTICAL
         mainLayout.setBackgroundResource(R.drawable.outer_box_background)
         mainLayout.layoutParams = mainLayoutParams
-        mainLayoutParams.setMargins(0, 10, 0, 0) // Add margins between writings
+        mainLayoutParams.setMargins(0, 10, 0, 0)
 
-        /*mainLayoutParams.setMargins(5, 10, 5, 40) // Add margins between writings
-        mainLayout.layoutParams = mainLayoutParams
-        mainLayout.orientation = LinearLayout.VERTICAL
-        mainLayout.setBackgroundResource(R.drawable.background_rounded_gray) // Rounded background
-*/
         val innerLayout = RelativeLayout(context)
         innerLayout.layoutParams = LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.MATCH_PARENT,
@@ -259,15 +243,13 @@ class Tab3Fragment : Fragment() {
             LinearLayout.LayoutParams.WRAP_CONTENT
         )
         textView.text = writing.text
-        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 23f)
+        textView.setTextSize(23f)
         textView.setPadding(50, 50, 50, 150)
-        // Set TextView to be not clickable and focusable
         textView.isClickable = false
         textView.isFocusable = false
 
         innerLayout.addView(textView)
 
-        // Create heart button
         val heartButton = ImageButton(context)
         val heartButtonParams = RelativeLayout.LayoutParams(
             RelativeLayout.LayoutParams.WRAP_CONTENT,
@@ -278,101 +260,97 @@ class Tab3Fragment : Fragment() {
         heartButton.setImageResource(
             if (writing.isLiked) R.drawable.ic_heart_liked else R.drawable.ic_heart_unliked
         )
-        heartButton.setBackgroundResource(android.R.color.transparent) // Make button background transparent
-        heartButton.setPadding(16, 16, 16, 16) // Adjust padding as needed
+        heartButton.setBackgroundResource(android.R.color.transparent)
+        heartButton.setPadding(16, 16, 16, 16)
         heartButton.layoutParams = heartButtonParams
 
-        var isLiked = writing.isLiked
-
         heartButton.setOnClickListener {
-            isLiked = !isLiked
+            writing.isLiked = !writing.isLiked
             heartButton.setImageResource(
-                if (isLiked) R.drawable.ic_heart_liked else R.drawable.ic_heart_unliked
+                if (writing.isLiked) R.drawable.ic_heart_liked else R.drawable.ic_heart_unliked
             )
-            writing.isLiked = isLiked
-            saveLikedState(contact, writing)
+            saveLikedStateToJson(contact, writing)
         }
 
-        // Add heart button to heartButtonLayout
         innerLayout.addView(heartButton)
-
-
         mainLayout.addView(innerLayout)
 
-        // Create horizontal LinearLayout to hold profile icon and author name
-        val authorLayout = LinearLayout(context)
-        authorLayout.layoutParams = LinearLayout.LayoutParams(
-            LinearLayout.LayoutParams.MATCH_PARENT,
-            LinearLayout.LayoutParams.WRAP_CONTENT
-        )
-        authorLayout.orientation = LinearLayout.HORIZONTAL
-        authorLayout.gravity = Gravity.CENTER_VERTICAL
-        authorLayout.setPadding(50, 25, 50, 50)
+        if (contact != null) {
+            val authorLayout = LinearLayout(context)
+            authorLayout.layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+            authorLayout.orientation = LinearLayout.HORIZONTAL
+            authorLayout.gravity = Gravity.CENTER_VERTICAL
+            authorLayout.setPadding(50, 25, 50, 50)
 
-        // Create ImageView for profile icon
-        val profileIcon = ImageView(context)
-        profileIcon.setImageResource(R.drawable.ic_person) // Replace with your actual icon resource
-        profileIcon.layoutParams = LinearLayout.LayoutParams(
-            100, // Adjust width as needed
-            100  // Adjust height as needed
-        )
-        profileIcon.scaleType = ImageView.ScaleType.CENTER_CROP // Adjust scale type as needed
-        authorLayout.addView(profileIcon)
+            val profileIcon = ImageView(context)
+            Glide.with(this)
+                .load(contact.profileImage)
+                .placeholder(R.drawable.ic_person)
+                .into(profileIcon)
+            profileIcon.layoutParams = LinearLayout.LayoutParams(
+                100,
+                100
+            )
+            profileIcon.scaleType = ImageView.ScaleType.CENTER_CROP
+            authorLayout.addView(profileIcon)
 
-        // Create TextView for author
-        val authorTextView = TextView(context)
-        authorTextView.text = contact.name
-        authorTextView.textSize = 15f
-        authorTextView.setPadding(16, 0, 20, 0) // Adjust padding as needed
-        authorTextView.setOnClickListener {
-            showContactDialog(contact)
+            val authorTextView = TextView(context)
+            authorTextView.text = contact.name
+            authorTextView.textSize = 15f
+            authorTextView.setPadding(16, 0, 20, 0)
+            authorTextView.setOnClickListener {
+                showContactDialog(contact)
+            }
+            authorLayout.addView(authorTextView)
+
+            mainLayout.addView(authorLayout)
         }
-        authorLayout.addView(authorTextView)
-
-        // Add authorLayout (profile icon + author name) to mainLayout
-        mainLayout.addView(authorLayout)
-
-        // Add heartButtonLayout to mainLayout
-        //mainLayout.addView(heartButtonLayout)
 
         return mainLayout
     }
 
-    private fun saveLikedState(contact: Contact, writing: Writing) {
-        val prefs = requireContext().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
-        val editor = prefs.edit()
-
-        // Find the index of the writing in the contact's list
-        val index = contact.writing.indexOfFirst { it.text == writing.text }
-        if (index != -1) {
-            // Update the writing object in the list
-            contact.writing[index] = writing
-
-            // Serialize the contact object to JSON
-            val gson = Gson()
-            val json = gson.toJson(contact)
-
-            // Save the JSON string to SharedPreferences using the contact's name as key
-            editor.putString(contact.name, json)
-            editor.apply()
-        }
-    }
-
-    private fun loadLikedState(contact: Contact) {
-        val prefs = requireContext().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
+    private fun saveLikedStateToJson(contact: Contact?, writing: Writing) {
         val gson = Gson()
-        val json = prefs.getString(contact.name, null)
+        val context = requireContext()
 
-        if (json != null) {
-            // Deserialize JSON to Contact object
-            val savedContact = gson.fromJson(json, Contact::class.java)
+        try {
+            val filename = "contact.json"
+            val file = File(context.filesDir, filename)
 
-            // Update each writing's liked state based on savedContact
-            for (savedWriting in savedContact.writing) {
-                val writing = contact.writing.find { it.text == savedWriting.text }
-                writing?.isLiked = savedWriting.isLiked
-                writing?.likeNum = savedWriting.likeNum
+            val contactList: MutableList<Contact> = if (file.exists()) {
+                val inputStream = FileInputStream(file)
+                val reader = BufferedReader(InputStreamReader(inputStream))
+                val jsonStringBuilder = StringBuilder()
+                var line: String?
+                while (reader.readLine().also { line = it } != null) {
+                    jsonStringBuilder.append(line)
+                }
+                reader.close()
+                gson.fromJson(jsonStringBuilder.toString(), object : TypeToken<MutableList<Contact>>() {}.type)
+            } else {
+                mutableListOf()
             }
+
+            if (contact != null) {
+                val contactIndex = contactList.indexOfFirst { it.name == contact.name }
+                if (contactIndex != -1) {
+                    val contactToUpdate = contactList[contactIndex]
+                    val writingIndex = contactToUpdate.writing.indexOfFirst { it.text == writing.text }
+                    if (writingIndex != -1) {
+                        contactToUpdate.writing[writingIndex] = writing
+                    }
+                }
+
+                val json = gson.toJson(contactList)
+                context.openFileOutput(filename, Context.MODE_PRIVATE).use {
+                    it.write(json.toByteArray())
+                }
+            }
+        } catch (e: Exception) {
+            Log.e("Tab3Fragment", "Error saving liked state: ${e.message}")
         }
     }
 
@@ -388,8 +366,8 @@ class Tab3Fragment : Fragment() {
         val contactAgeTextView: TextView = dialogView.findViewById(R.id.contact_age)
         val contactIntroductionTextView: TextView = dialogView.findViewById(R.id.contact_introduction)
         val sendMessageButton: Button = dialogView.findViewById(R.id.send_message_button)
+        val closeButton: ImageButton = dialogView.findViewById(R.id.btn_close) // Add this line
 
-        // Load contact image using Glide
         Glide.with(requireContext())
             .load(contact.profileImage)
             .placeholder(R.drawable.ic_contact_placeholder)
@@ -402,16 +380,22 @@ class Tab3Fragment : Fragment() {
         contactAgeTextView.text = "Age: ${contact.age?.toString()}"
         contactIntroductionTextView.text = contact.introduction
 
-        // Set button click listener
         sendMessageButton.setOnClickListener {
-            Toast.makeText(requireContext(), "Message sent to ${contact.name}", Toast.LENGTH_SHORT).show()
-            // Perform any additional actions here
+            val bundle = Bundle().apply {
+                putString("contactName", contact.name)
+                putString("contact", Gson().toJson(contact))
+            }
+            findNavController().navigate(R.id.action_contactListFragment_to_contactWritingsFragment, bundle)
+            dialog.dismiss()
+        }
+
+        closeButton.setOnClickListener { // Add this block
+            dialog.dismiss()
         }
 
         dialog.setContentView(dialogView)
         dialog.show()
 
-        // Set dialog width and height
         val window = dialog.window
         if (window != null) {
             val metrics = DisplayMetrics()
@@ -420,7 +404,6 @@ class Tab3Fragment : Fragment() {
             val height = (metrics.heightPixels * 0.5).toInt()
             window.setLayout(width, height)
 
-            // Set button width to match 80% of dialog width
             val buttonWidth = (width * 0.7).toInt()
             sendMessageButton.post {
                 val layoutParams = sendMessageButton.layoutParams
@@ -429,4 +412,5 @@ class Tab3Fragment : Fragment() {
             }
         }
     }
+
 }
