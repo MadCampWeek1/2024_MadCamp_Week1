@@ -228,7 +228,7 @@ class Tab3Fragment : Fragment() {
         mainLayout.orientation = LinearLayout.VERTICAL
         mainLayout.setBackgroundResource(R.drawable.outer_box_background)
         mainLayout.layoutParams = mainLayoutParams
-        mainLayoutParams.setMargins(0, 10, 0, 100)
+        mainLayoutParams.setMargins(0, 10, 0, 150)
 
         // Layout for the profile image and author name
         val authorLayout = LinearLayout(context)
