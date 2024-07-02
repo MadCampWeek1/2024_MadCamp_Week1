@@ -44,6 +44,9 @@
         <action
             android:id="@+id/action_tab3Fragment_to_addWritingFragment"
             app:destination="@id/addWritingFragment" />
+        <action
+            android:id="@+id/action_tab3Fragment_to_viewPagerFragment"
+            app:destination="@id/viewPagerFragment" />
         <argument
             android:name="newWriting"
             app:argType="string" />
@@ -69,6 +72,16 @@
 
     <action
         android:id="@+id/action_contactListFragment_to_contactWritingsFragment"
+        app:destination="@id/contactWritingsFragment" />
+
+    <fragment
+        android:id="@+id/viewPagerFragment"
+        android:name="com.example.madcamp_week1.ContactWritingsFragment"
+        android:label="Contact Writings"
+        tools:layout="@layout/fragment_writings" />
+
+    <action
+        android:id="@+id/action_tab3Fragment_to_viewPagerFragment"
         app:destination="@id/contactWritingsFragment" />
 
 
