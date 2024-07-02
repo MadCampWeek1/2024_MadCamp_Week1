@@ -1,5 +1,6 @@
 package com.example.madcamp_week1
 
+import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.graphics.Canvas
@@ -7,10 +8,14 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.os.Bundle
 import android.util.Log
-import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.CheckBox
+import android.widget.EditText
+import android.widget.RadioButton
+import android.widget.RadioGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
@@ -22,11 +27,11 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.madcamp_week1.viewmodel.ContactViewModel
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-//import com.google.gson.reflect.TypeToken
-import java.io.BufferedReader
-import java.io.InputStreamReader
+import java.io.*
+
 class ContactListFragment : Fragment() {
 
     private lateinit var contactRecyclerView: RecyclerView
@@ -50,6 +55,12 @@ class ContactListFragment : Fragment() {
             startActivity(intent)
             // Finish the current activity
             activity?.finish()
+        }
+
+        // Add new contact button
+        val addButton: FloatingActionButton = view.findViewById(R.id.fab_add)
+        addButton.setOnClickListener {
+            showAddContactDialog()
         }
 
         // RecyclerView 설정
@@ -182,64 +193,89 @@ class ContactListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        loadContactsFromSharedPreferences()
+        loadContactsFromJson()
     }
 
-    private fun getContactList(): List<Contact> {
-        Log.d("ContactListFragment", "getContactList called")
-        val contactList: List<Contact> = readContactsFromJson()
-        Log.d("ContactListFragment", "Contact list created with size: ${contactList.size}")
-        return contactList
-    }
-
-    private fun readContactsFromJson(): List<Contact> {
-        return try {
-            val inputStream = resources.openRawResource(R.raw.contact)
-            val reader = BufferedReader(InputStreamReader(inputStream))
-            val gson = Gson()
-            val contactType = object : com.google.gson.reflect.TypeToken<List<Contact>>() {}.type
-            val contacts: List<Contact> = gson.fromJson(reader, contactType)
-            Log.d("ContactListFragment", "Successfully read contacts from JSON")
-            contacts
-        } catch (e: Exception) {
-            Log.e("ContactListFragment", "Error reading contacts from JSON", e)
-            emptyList()
-        }
-    }
-
-    private fun saveContactsToSharedPreferences() {
+    private fun loadContactsFromJson() {
         try {
-            val sharedPreferences = requireActivity().getSharedPreferences("contacts", Context.MODE_PRIVATE)
-            val editor = sharedPreferences.edit()
-            val gson = Gson()
-            val json = gson.toJson(contactViewModel.contactList.value)
-            editor.putString("contact_list", json)
-            editor.apply()
+            val contacts = ContactUtils.readContactsFromJson(requireContext())
+            contactViewModel.loadContacts(contacts)
         } catch (e: Exception) {
-            Log.e("ContactListFragment", "Error saving contacts to SharedPreferences", e)
-        }
-    }
-
-    private fun loadContactsFromSharedPreferences() {
-        try {
-            val sharedPreferences = requireActivity().getSharedPreferences("contacts", Context.MODE_PRIVATE)
-            val gson = Gson()
-            val json = sharedPreferences.getString("contact_list", null)
-            if (json != null) {
-                val contactType = object : TypeToken<List<Contact>>() {}.type
-                val contacts: List<Contact> = gson.fromJson(json, contactType)
-                contactViewModel.loadContacts(contacts)
-            } else {
-                contactViewModel.loadContacts(getContactList())
-            }
-        } catch (e: Exception) {
-            Log.e("ContactListFragment", "Error loading contacts from SharedPreferences", e)
-            contactViewModel.loadContacts(getContactList())
+            Log.e("ContactListFragment", "Error loading contacts from JSON", e)
+            contactViewModel.loadContacts(emptyList())
         }
     }
 
     fun removeContact(contact: Contact) {
         contactViewModel.removeContact(contact)
-        saveContactsToSharedPreferences()
+        saveContactsToJson()
+    }
+
+    private fun saveContactsToJson() {
+        try {
+            val contacts = contactViewModel.contactList.value ?: return
+            ContactUtils.saveContactsToJson(requireContext(), contacts)
+        } catch (e: Exception) {
+            Log.e("ContactListFragment", "Error saving contacts to JSON", e)
+        }
+    }
+
+    private fun showAddContactDialog() {
+        val dialog = Dialog(requireContext())
+        dialog.setContentView(R.layout.dialog_add_contact)
+
+        val nameEditText = dialog.findViewById<EditText>(R.id.edit_text_name)
+        val phoneEditText = dialog.findViewById<EditText>(R.id.edit_text_phone)
+        val ageEditText = dialog.findViewById<EditText>(R.id.edit_text_age)
+        val radioGroupGender = dialog.findViewById<RadioGroup>(R.id.radio_group_gender)
+        val maleRadioButton = dialog.findViewById<RadioButton>(R.id.radio_male)
+        val femaleRadioButton = dialog.findViewById<RadioButton>(R.id.radio_female)
+        val introductionEditText = dialog.findViewById<EditText>(R.id.edit_text_introduction)
+        val saveButton = dialog.findViewById<Button>(R.id.button_save_contact)
+
+        saveButton.setOnClickListener {
+            val name = nameEditText.text.toString().trim()
+            val phone = phoneEditText.text.toString().trim()
+            val age = ageEditText.text.toString().trim().toIntOrNull() ?: 0
+            val gender = when (radioGroupGender.checkedRadioButtonId) {
+                R.id.radio_male -> "남"
+                R.id.radio_female -> "여"
+                else -> ""
+            }
+            val introduction = introductionEditText.text.toString().trim()
+
+            if (name.isEmpty() || phone.isEmpty() || gender.isEmpty() || introduction.isEmpty()) {
+                Toast.makeText(requireContext(), "Please fill in all fields", Toast.LENGTH_SHORT).show()
+            } else {
+                val newContact = Contact(
+                    name = name,
+                    phone = phone,
+                    profileImage = R.drawable.ic_person.toString(),
+                    isPendingDelete = false,
+                    owner = false,
+                    age = age,
+                    gender = gender,
+                    introduction = introduction,
+                    writing = mutableListOf()
+                )
+
+                contactViewModel.addContact(newContact)
+                saveContactsToJson()
+                dialog.dismiss()
+                Toast.makeText(requireContext(), "Contact added successfully", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        dialog.show()
+
+        // Set the dialog window size to a percentage of the screen size
+        val window = dialog.window
+        val metrics = resources.displayMetrics
+        val width = (metrics.widthPixels * 0.9).toInt() // 90% of screen width
+        val height = (metrics.heightPixels * 0.7).toInt() // 70% of screen height
+
+        if (window != null) {
+            window.setLayout(width, height)
+        }
     }
 }

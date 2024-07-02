@@ -32,7 +32,7 @@ class ThemeDetailFragment : Fragment() {
         recyclerView.adapter = imageAdapter
 
         // Retrieve the title from arguments and setup toolbar
-        val themeTitle = arguments?.getString("themeTitle") ?: "Theme Detail"
+        val themeTitle = arguments?.getString("themeTitle") ?: "" // Theme Title 이었던 것
         val toolbar = view.findViewById<Toolbar>(R.id.toolbar)
         toolbar.apply {
             title = themeTitle

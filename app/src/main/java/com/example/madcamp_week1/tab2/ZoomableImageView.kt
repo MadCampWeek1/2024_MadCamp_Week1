@@ -29,7 +29,7 @@ class ZoomableImageView(context: Context, attrs: AttributeSet?) :
     private var scaleFactor = 1.0f
     private var initialScale = 1.0f
     private val minScaleFactor = 0.5f
-    private val maxScaleFactor = 10.0f
+    private val maxScaleFactor = 70.0f
 
     init {
         imageMatrix = matrix
