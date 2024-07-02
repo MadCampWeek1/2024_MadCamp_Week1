@@ -1,10 +1,12 @@
 package com.example.madcamp_week1
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
@@ -46,12 +48,15 @@ class HomeFragment : Fragment() {
             }
         }
 
-        /*view.findViewById<Button>(R.id.btnTheme4).apply {
-            setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.image4, 0, 0) // Set image on top
-            setOnClickListener {
-                onCategoryItemClicked(R.id.action_homeFragment_to_themeDetailFragment, theme4Images)
-            }
-        }*/
+        // Find the TextView in the Toolbar and set a click listener
+        val appTitle: TextView = view.findViewById(R.id.appTitle)
+        appTitle.setOnClickListener {
+            // Navigate to IntroActivity
+            val intent = Intent(activity, IntroActivity::class.java)
+            startActivity(intent)
+            // Finish the current activity
+            activity?.finish()
+        }
 
         // Add more buttons setups for additional themes as needed
 

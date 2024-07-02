@@ -12,10 +12,17 @@
         android:layout_height="?attr/actionBarSize"
         android:background="@color/white"
         android:elevation="0dp"
-        android:layout_alignParentTop="true"
-        app:title="SnapGeul  "
-        app:titleTextAppearance="@style/ToolbarTitleText"
-        app:titleTextColor="@color/indigo_700"/>
+        android:layout_alignParentTop="true">
+
+        <TextView
+            android:id="@+id/appTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="SnapGeul"
+            android:textAppearance="@style/ToolbarTitleText"
+            android:textColor="@color/indigo_700" />
+
+    </com.google.android.material.appbar.MaterialToolbar>
 
     <!-- SearchView for searching contacts -->
     <androidx.appcompat.widget.SearchView

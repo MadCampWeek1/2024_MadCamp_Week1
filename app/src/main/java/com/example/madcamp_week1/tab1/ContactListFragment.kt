@@ -1,6 +1,7 @@
 package com.example.madcamp_week1
 
 import android.content.Context
+import android.content.Intent
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
@@ -10,6 +11,7 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
@@ -39,6 +41,16 @@ class ContactListFragment : Fragment() {
     ): View? {
         Log.d("ContactListFragment", "onCreateView called")
         val view = inflater.inflate(R.layout.fragment_contact_list, container, false)
+
+        // Find the TextView in the Toolbar and set a click listener
+        val appTitle: TextView = view.findViewById(R.id.appTitle)
+        appTitle.setOnClickListener {
+            // Navigate to IntroActivity
+            val intent = Intent(activity, IntroActivity::class.java)
+            startActivity(intent)
+            // Finish the current activity
+            activity?.finish()
+        }
 
         // RecyclerView 설정
         contactRecyclerView = view.findViewById(R.id.recycler_view_contacts)
