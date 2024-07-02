@@ -15,6 +15,16 @@
         app:titleTextAppearance="@style/ToolbarTitleText"
         app:titleTextColor="@color/indigo_700" >
 
+        <TextView
+            android:id="@+id/appTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="SnapGeul"
+            android:textAppearance="@style/ToolbarTitleText"
+            android:textColor="@color/indigo_700"
+            android:clickable="true"
+            android:focusable="true" />
+
         <ImageButton
             android:id="@+id/btn_heart"
             android:layout_width="wrap_content"

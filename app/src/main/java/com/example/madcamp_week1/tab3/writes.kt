@@ -2,6 +2,7 @@ package com.example.madcamp_week1
 
 import android.app.Dialog
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.DisplayMetrics
 import android.util.Log
@@ -35,8 +36,18 @@ class Tab3Fragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_geul, container, false)
-    }
+        // Inflate the layout for this fragment
+        val view = inflater.inflate(R.layout.fragment_geul, container, false)
+
+        // Find the TextView in the Toolbar and set a click listener
+        val appTitle: TextView = view.findViewById(R.id.appTitle)
+        appTitle.setOnClickListener {
+            // Navigate to IntroActivity
+            val intent = Intent(requireActivity(), IntroActivity::class.java)
+            startActivity(intent)
+        }
+
+        return view    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
