@@ -118,8 +118,8 @@ class ContactAdapter(
 
         contactNameTextView.text = contact.name
         contactPhoneTextView.text = contact.phone
-        contactGenderTextView.text = "Gender: ${contact.gender}"
-        contactAgeTextView.text = "Age: ${contact.age?.toString()}"
+        contactGenderTextView.text = "성별: ${contact.gender}"
+        contactAgeTextView.text = "나이: ${contact.age?.toString()}"
         contactIntroductionTextView.text = contact.introduction
 
         // Set button click listener
