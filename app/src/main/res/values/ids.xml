@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <item name="appTitle" type="id" />
+    <item name="viewPager" type="id" />
+    <item name="sampleTextView" type="id" />
 </resources>

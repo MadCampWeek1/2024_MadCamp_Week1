@@ -69,7 +69,7 @@
                         android:id="@+id/imageTheme1"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:src="@drawable/dog1"
+                        android:src="@drawable/cat3"
                         android:scaleType="centerCrop"
                         android:alpha="0.7" />
 
@@ -133,7 +133,7 @@
                         android:id="@+id/imageTheme2"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:src="@drawable/food1"
+                        android:src="@drawable/food4"
                         android:scaleType="centerCrop"
                         android:alpha="0.7" />
 
@@ -196,7 +196,7 @@
                         android:id="@+id/imageTheme3"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:src="@drawable/people1"
+                        android:src="@drawable/family1"
                         android:scaleType="centerCrop"
                         android:alpha="0.7" />
 
