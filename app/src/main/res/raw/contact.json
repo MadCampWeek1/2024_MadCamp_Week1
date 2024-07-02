@@ -22,7 +22,7 @@
     ],
     "isPendingDelete": false,
     "owner": true,
-    "gender": "Male",
+    "gender": "남",
     "age": 14,
     "introduction": "몰입의 힘!"
   },
@@ -55,7 +55,7 @@
     ],
     "isPendingDelete": false,
     "owner": false,
-    "gender": "Male",
+    "gender": "남",
     "age": 22,
     "introduction": "카이스트생 1"
   },
@@ -83,7 +83,7 @@
     ],
     "isPendingDelete": false,
     "owner": false,
-    "gender": "Female",
+    "gender": "여",
     "age": 23,
     "introduction": "냥대생 1"
   },
@@ -116,7 +116,7 @@
     ],
     "isPendingDelete": false,
     "owner": false,
-    "gender": "Female",
+    "gender": "여",
     "age": 21,
     "introduction": "숙대생 1"
   },
@@ -134,7 +134,7 @@
     ],
     "isPendingDelete": false,
     "owner": false,
-    "gender": "Male",
+    "gender": "남",
     "age": 22,
     "introduction": "카이스트생 2"
   },
@@ -151,7 +151,7 @@
     ],
     "isPendingDelete": false,
     "owner": false,
-    "gender": "Female",
+    "gender": "여",
     "age": 23,
     "introduction": "냥대생 2"
   },
@@ -168,7 +168,7 @@
     ],
     "isPendingDelete": false,
     "owner": false,
-    "gender": "Female",
+    "gender": "여",
     "age": 22,
     "introduction": "냥대생 3"
   },
@@ -190,7 +190,7 @@
     ],
     "isPendingDelete": false,
     "owner": false,
-    "gender": "Male",
+    "gender": "남",
     "age": 100,
     "introduction": "친구가 가장 소중해!!!"
   },
@@ -212,7 +212,7 @@
     ],
     "isPendingDelete": false,
     "owner": false,
-    "gender": "Male",
+    "gender": "남",
     "age": 8,
     "introduction": "난 순록."
   },
@@ -234,7 +234,7 @@
     ],
     "isPendingDelete": false,
     "owner": false,
-    "gender": "Male",
+    "gender": "남",
     "age": 5,
     "introduction": "오~ 예쁜 누나다!"
   }
