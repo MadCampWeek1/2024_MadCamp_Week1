@@ -10,12 +10,7 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.ImageButton
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.RelativeLayout
-import android.widget.TextView
+import android.widget.*
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
@@ -89,7 +84,6 @@ class Tab3Fragment : Fragment() {
         contactList = readContactsFromJson(requireContext())
         populateWritings(contactList.flatMap { it.writing })
     }
-
 
     private fun getLikedWritings(): List<Writing> {
         return contactList.flatMap { it.writing }.filter { it.isLiked }
@@ -264,12 +258,26 @@ class Tab3Fragment : Fragment() {
         profileIcon.scaleType = ImageView.ScaleType.CENTER_CROP
         authorLayout.addView(profileIcon)
 
+        // Add click listener to show dialog
+        profileIcon.setOnClickListener {
+            if (contact != null) {
+                showContactDialog(contact)
+            }
+        }
+
         // Author name text view
         val authorTextView = TextView(context)
         authorTextView.text = contact?.name ?: "Unknown Author" // Use default text if no contact
         authorTextView.textSize = 18f // Adjust text size as needed
         authorTextView.setPadding(16, 0, 0, 0) // Adjust padding as needed
         authorLayout.addView(authorTextView)
+
+        // Add click listener to show dialog
+        authorTextView.setOnClickListener {
+            if (contact != null) {
+                showContactDialog(contact)
+            }
+        }
 
         mainLayout.addView(authorLayout)
 
@@ -414,10 +422,10 @@ class Tab3Fragment : Fragment() {
             val metrics = DisplayMetrics()
             window.windowManager.defaultDisplay.getMetrics(metrics)
             val width = (metrics.widthPixels * 0.8).toInt()
-            val height = (metrics.heightPixels * 0.5).toInt()
+            val height = (metrics.heightPixels * 0.65).toInt()
             window.setLayout(width, height)
 
-            val buttonWidth = (width * 0.7).toInt()
+            val buttonWidth = (width * 0.8).toInt()
             sendMessageButton.post {
                 val layoutParams = sendMessageButton.layoutParams
                 layoutParams.width = buttonWidth
@@ -425,5 +433,4 @@ class Tab3Fragment : Fragment() {
             }
         }
     }
-
 }
