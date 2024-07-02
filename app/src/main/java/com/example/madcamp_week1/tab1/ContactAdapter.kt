@@ -147,11 +147,11 @@ class ContactAdapter(
             val metrics = DisplayMetrics()
             window.windowManager.defaultDisplay.getMetrics(metrics)
             val width = (metrics.widthPixels * 0.8).toInt()
-            val height = (metrics.heightPixels * 0.5).toInt()
+            val height = (metrics.heightPixels * 0.65).toInt()
             window.setLayout(width, height)
 
             // Set button width to match 80% of dialog width
-            val buttonWidth = (width * 0.7).toInt()
+            val buttonWidth = (width * 0.8).toInt()
             sendMessageButton.post {
                 val layoutParams = sendMessageButton.layoutParams
                 layoutParams.width = buttonWidth

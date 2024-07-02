@@ -25,6 +25,7 @@ class ImageDetailFragment : Fragment() {
 
         val btnBack = view.findViewById<ImageButton>(R.id.btnBack)
         btnBack.setOnClickListener {
+            zoomableImageView.resetZoom() // Zoom reset 추가
             findNavController().navigateUp()
         }
 

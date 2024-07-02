@@ -31,10 +31,11 @@ class ThemeDetailFragment : Fragment() {
         }
         recyclerView.adapter = imageAdapter
 
-        // Setup toolbar
+        // Retrieve the title from arguments and setup toolbar
+        val themeTitle = arguments?.getString("themeTitle") ?: "Theme Detail"
         val toolbar = view.findViewById<Toolbar>(R.id.toolbar)
         toolbar.apply {
-            title = "Theme Detail"
+            title = themeTitle
             setNavigationIcon(R.drawable.ic_arrow_back)
             setNavigationOnClickListener { findNavController().navigateUp() }
         }
