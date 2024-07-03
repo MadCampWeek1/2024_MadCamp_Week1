@@ -56,6 +56,12 @@ https://github.com/MadCampWeek1/2024_MadCamp_Week1/assets/110375619/87c271b1-74e
 
 https://github.com/MadCampWeek1/2024_MadCamp_Week1/assets/110375619/cfcb7fff-08aa-47c6-8480-c5667d04241d
 
+새로운 연락처 추가 기능
+
+
+https://github.com/MadCampWeek1/2024_MadCamp_Week1/assets/110375619/7984ddce-0b2e-424c-8286-c5719781d6ac
+
+
 검색, 프로필 상세 보기 및 삭제 기능
 
 https://github.com/MadCampWeek1/2024_MadCamp_Week1/assets/110375619/5e6ccbb3-aa2b-4ad1-9717-53171d6680fc
