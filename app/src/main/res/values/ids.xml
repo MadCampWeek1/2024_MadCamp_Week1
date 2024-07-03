@@ -3,4 +3,5 @@
     <item name="appTitle" type="id" />
     <item name="viewPager" type="id" />
     <item name="sampleTextView" type="id" />
+    <item name="textViewWriting" type="id" />
 </resources>

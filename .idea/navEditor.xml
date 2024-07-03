@@ -8,12 +8,17 @@
             <LayoutPositions>
               <option name="myPositions">
                 <map>
-                  <entry key="action_addWritingFragment_to_tab3Fragment">
+                  <entry key="action_addWritingFragment_to_notificationsFragment">
                     <value>
                       <LayoutPositions />
                     </value>
                   </entry>
                   <entry key="action_contactListFragment_to_contactWritingsFragment">
+                    <value>
+                      <LayoutPositions />
+                    </value>
+                  </entry>
+                  <entry key="action_tab3Fragment_to_viewPagerFragment">
                     <value>
                       <LayoutPositions />
                     </value>
@@ -134,7 +139,7 @@
                       </LayoutPositions>
                     </value>
                   </entry>
-                  <entry key="view">
+                  <entry key="viewPagerFragment">
                     <value>
                       <LayoutPositions>
                         <option name="myPosition">

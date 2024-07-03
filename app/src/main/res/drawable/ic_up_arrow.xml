@@ -1,12 +1,23 @@
-<!-- ic_arrow_up.xml -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="24dp"
     android:height="24dp"
-    android:viewportWidth="24"
-    android:viewportHeight="24"
-    android:tint="?attr/colorControlNormal"
-    android:alpha="0.8">
+    android:viewportWidth="24.0"
+    android:viewportHeight="24.0">
+
+    <!-- First arrow line -->
     <path
-        android:fillColor="@android:color/white"
-        android:pathData="M12,8l-8,8h16z"/>
+        android:strokeColor="#000000"
+        android:strokeWidth="2"
+        android:strokeLineCap="round"
+        android:pathData="M6,16 L12,8 M18,16 L12,8"
+        android:fillColor="#2F3645" />
+
+    <!-- Second arrow line -->
+    <path
+        android:strokeColor="#000000"
+        android:strokeWidth="2"
+        android:strokeLineCap="round"
+        android:pathData="M6,10 L12,2 M18,10 L12,2"
+        android:fillColor="#2F3645" />
+
 </vector>
