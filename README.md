@@ -32,6 +32,8 @@
 
 <img src="https://github.com/MadCampWeek1/2024_MadCamp_Week1/assets/110375619/dda4d955-5766-4772-9c6b-3401219a62e9" width="250"></img>
 
+https://github.com/MadCampWeek1/2024_MadCamp_Week1/assets/110375619/dda4d955-5766-4772-9c6b-3401219a62e9
+
 탭 간의 이동
 https://github.com/MadCampWeek1/2024_MadCamp_Week1/assets/110375619/87c271b1-74e3-4c41-80c4-0aee34395c6a
 
