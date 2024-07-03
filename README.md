@@ -37,6 +37,8 @@ https://github.com/MadCampWeek1/2024_MadCamp_Week1/assets/110375619/dda4d955-576
 탭 간의 이동
 https://github.com/MadCampWeek1/2024_MadCamp_Week1/assets/110375619/87c271b1-74e3-4c41-80c4-0aee34395c6a
 
+https://github.com/MadCampWeek1/2024_MadCamp_Week1/assets/110375619/87c271b1-74e3-4c41-80c4-0aee34395c6a
+
 **Contact**
 연락처 탭 - 프로필 상세, 글 보러가기, 좋아요 기능
 https://github.com/MadCampWeek1/2024_MadCamp_Week1/assets/110375619/cfcb7fff-08aa-47c6-8480-c5667d04241d
