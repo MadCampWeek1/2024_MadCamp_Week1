@@ -70,7 +70,7 @@ https://github.com/MadCampWeek1/2024_MadCamp_Week1/assets/110375619/0541f77e-3f1
 
 <br/>
 
-### GEUL
+### GEUL
 
 GEUL 탭 - 좋아요 필터링 및 새로운 GEUL 추가 기능
 
