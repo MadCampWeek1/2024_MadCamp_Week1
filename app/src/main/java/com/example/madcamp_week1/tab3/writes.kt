@@ -34,12 +34,6 @@ class Tab3Fragment : Fragment() {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_geul, container, false)
 
-        /*val upArrowButton: ImageButton = view.findViewById(R.id.btn_up_arrow)
-        upArrowButton.setOnClickListener {
-            // Navigate to ViewPagerFragment
-            findNavController().navigate(R.id.action_tab3Fragment_to_viewPagerFragment)
-        }*/
-
         // Find the TextView in the Toolbar and set a click listener
         val appTitle: TextView = view.findViewById(R.id.appTitle)
         appTitle.setOnClickListener {
@@ -48,7 +42,16 @@ class Tab3Fragment : Fragment() {
             startActivity(intent)
         }
 
-        return view    }
+        val upArrowButton: ImageButton = view.findViewById(R.id.btn_up_arrow)
+        upArrowButton.setOnClickListener {
+            Log.d("upbottom", "Before Adding")
+
+            // Navigate to ViewPagerFragment
+            findNavController().navigate(R.id.action_tab3Fragment_to_viewPagerFragment)
+        }
+
+        return view
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

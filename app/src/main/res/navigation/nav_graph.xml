@@ -76,13 +76,13 @@
 
     <fragment
         android:id="@+id/viewPagerFragment"
-        android:name="com.example.madcamp_week1.ContactWritingsFragment"
-        android:label="Contact Writings"
-        tools:layout="@layout/fragment_writings" />
+        android:name="com.example.madcamp_week1.ViewPagerFragment"
+        android:label="ViewPagerFragment"
+        tools:layout="@layout/fragment_view_pager" />
 
     <action
         android:id="@+id/action_tab3Fragment_to_viewPagerFragment"
-        app:destination="@id/contactWritingsFragment" />
+        app:destination="@id/viewPagerFragment" />
 
 
 </navigation>
