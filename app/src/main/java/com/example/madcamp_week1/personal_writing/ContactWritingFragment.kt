@@ -1,34 +1,32 @@
 package com.example.madcamp_week1
 
+import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
 import android.util.DisplayMetrics
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.Button
-import android.widget.ImageButton
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.TextView
+import android.view.*
+import android.widget.*
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.gson.Gson
+import com.google.gson.JsonSyntaxException
 import com.google.gson.reflect.TypeToken
 import java.io.BufferedReader
 import java.io.File
 import java.io.FileInputStream
+import java.io.IOException
 import java.io.InputStreamReader
 
 class ContactWritingsFragment : Fragment() {
 
     private lateinit var writingsContainer: LinearLayout
     private var contact: Contact? = null
+    private var isEditMode = true
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -44,6 +42,8 @@ class ContactWritingsFragment : Fragment() {
         toolbar.setNavigationOnClickListener {
             findNavController().navigateUp()
         }
+
+        setHasOptionsMenu(true) // Ensure this line is present
 
         return view
     }
@@ -61,6 +61,8 @@ class ContactWritingsFragment : Fragment() {
         }
     }
 
+
+
     private fun populateWritings(writings: List<Writing>, contact: Contact) {
         writingsContainer.removeAllViews()
         for (writing in writings) {
@@ -70,6 +72,7 @@ class ContactWritingsFragment : Fragment() {
             val authorLayout = itemView.findViewById<LinearLayout>(R.id.author_layout)
             val profileImageView = itemView.findViewById<ImageView>(R.id.person_icon)
             val authorTextView = itemView.findViewById<TextView>(R.id.author_text_view)
+            val deleteButton = itemView.findViewById<ImageButton>(R.id.delete_button)
 
             textView.text = writing.text
             textView.textSize = 18f
@@ -101,7 +104,76 @@ class ContactWritingsFragment : Fragment() {
                 showContactDialog(contact)
             }
 
+            // Show delete button only if in edit mode and owner is true
+            if (isEditMode && contact.owner) {
+                Log.d("contactwritingfragment", "Contact List: $isEditMode")
+                deleteButton.visibility = View.VISIBLE
+                deleteButton.setOnClickListener {
+                    showDeleteConfirmationDialog(contact, writing)
+                }
+            } else {
+                deleteButton.visibility = View.GONE
+            }
+
             writingsContainer.addView(itemView)
+        }
+    }
+
+    private fun showDeleteConfirmationDialog(contact: Contact, writing: Writing) {
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setMessage("삭제하겠습니까?")
+            .setPositiveButton("확인") { _, _ ->
+                contact.writing.remove(writing)
+                saveContactToJson(contact)
+                populateWritings(contact.writing, contact)
+            }
+            .setNegativeButton("취소", null)
+        builder.create().show()
+    }
+
+    private fun saveContactToJson(contact: Contact) {
+        val gson = Gson()
+        val context = requireContext()
+
+        try {
+            val filename = "contact.json"
+            val file = File(context.filesDir, filename)
+
+            val contactList: MutableList<Contact> = if (file.exists()) {
+                try {
+                    val inputStream = FileInputStream(file)
+                    val reader = BufferedReader(InputStreamReader(inputStream))
+                    val jsonStringBuilder = StringBuilder()
+                    var line: String?
+                    while (reader.readLine().also { line = it } != null) {
+                        jsonStringBuilder.append(line)
+                    }
+                    reader.close()
+                    gson.fromJson(jsonStringBuilder.toString(), object : TypeToken<MutableList<Contact>>() {}.type)
+                } catch (e: JsonSyntaxException) {
+                    Log.e("ContactWritingsFragment", "Error parsing JSON: ${e.message}")
+                    mutableListOf<Contact>()
+                }
+            } else {
+                mutableListOf()
+            }
+
+            val contactIndex = contactList.indexOfFirst { it.name == contact.name }
+            if (contactIndex != -1) {
+                contactList[contactIndex] = contact
+            } else {
+                contactList.add(contact)
+            }
+
+            val json = gson.toJson(contactList)
+            context.openFileOutput(filename, Context.MODE_PRIVATE).use {
+                it.write(json.toByteArray())
+            }
+
+        } catch (e: IOException) {
+            Log.e("ContactWritingsFragment", "Error saving contact: ${e.message}")
+        } catch (e: Exception) {
+            Log.e("ContactWritingsFragment", "Unexpected error: ${e.message}")
         }
     }
 
@@ -153,7 +225,6 @@ class ContactWritingsFragment : Fragment() {
         try {
             val filename = "contact.json"
             val file = File(context.filesDir, filename)
-
             if (file.exists()) {
                 val inputStream = FileInputStream(file)
                 val reader = BufferedReader(InputStreamReader(inputStream))
@@ -194,7 +265,7 @@ class ContactWritingsFragment : Fragment() {
         val contactAgeTextView: TextView = dialogView.findViewById(R.id.contact_age)
         val contactIntroductionTextView: TextView = dialogView.findViewById(R.id.contact_introduction)
         val sendMessageButton: Button = dialogView.findViewById(R.id.send_message_button)
-        val closeButton: ImageButton = dialogView.findViewById(R.id.btn_close) // Add this line
+        val closeButton: ImageButton = dialogView.findViewById(R.id.btn_close)
 
         Glide.with(requireContext())
             .load(contact.profileImage)
@@ -217,7 +288,7 @@ class ContactWritingsFragment : Fragment() {
             dialog.dismiss()
         }
 
-        closeButton.setOnClickListener { // Add this block
+        closeButton.setOnClickListener {
             dialog.dismiss()
         }
 
@@ -240,5 +311,4 @@ class ContactWritingsFragment : Fragment() {
             }
         }
     }
-
 }

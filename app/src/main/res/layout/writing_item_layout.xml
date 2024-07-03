@@ -23,17 +23,20 @@
             android:layout_height="24dp"
             android:layout_marginEnd="8dp"
             android:contentDescription="@string/profile_icon_description"
-            android:src="@drawable/ic_person"/>
+            android:src="@drawable/ic_person" />
 
         <TextView
             android:id="@+id/author_text_view"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:textSize="18sp"
             android:fontFamily="@font/roboto_regular"
             android:textStyle="bold"
-            android:text="Author Name"/>
+            android:text="Author Name" />
+
     </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -51,17 +54,31 @@
             android:text="Writing Text"
             android:paddingTop="16dp"
             android:paddingLeft="16dp"
-            android:paddingBottom="8dp"/>
+            android:paddingBottom="8dp" />
 
-        <ImageButton
-            android:id="@+id/heart_button"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_heart_unliked"
-            android:background="?attr/selectableItemBackground"
-            android:contentDescription="@string/heart_button_description"
-            android:layout_gravity="end"
-            android:padding="10dp" />
-    </LinearLayout>
+            android:orientation="horizontal"
+            android:gravity="end">
 
+            <ImageButton
+                android:id="@+id/delete_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_delete2"
+                android:padding="8dp"
+                android:background="?attr/selectableItemBackground"
+                android:visibility="gone" />
+
+            <ImageButton
+                android:id="@+id/heart_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_heart_unliked"
+                android:background="?attr/selectableItemBackground"
+                android:contentDescription="@string/heart_button_description"
+                android:padding="10dp" />
+        </LinearLayout>
+    </LinearLayout>
 </LinearLayout>
