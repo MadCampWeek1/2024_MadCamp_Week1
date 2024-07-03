@@ -50,7 +50,7 @@ https://github.com/MadCampWeek1/2024_MadCamp_Week1/assets/110375619/87c271b1-74e
 
 <br/>
 
-**Contact**
+### Contact
 
 연락처 탭 - 프로필 상세, 글 보러가기, 좋아요 기능
 
@@ -62,7 +62,7 @@ https://github.com/MadCampWeek1/2024_MadCamp_Week1/assets/110375619/5e6ccbb3-aa2
 
 <br/>
 
-**Gallery**
+### Gallery
 
 갤러리 탭 - 사진 스크롤 및 확대 기능
 
@@ -70,7 +70,7 @@ https://github.com/MadCampWeek1/2024_MadCamp_Week1/assets/110375619/0541f77e-3f1
 
 <br/>
 
-**GEUL**
+### GEUL
 
 GEUL 탭 - 좋아요 필터링 및 새로운 GEUL 추가 기능
 
@@ -83,6 +83,6 @@ https://github.com/MadCampWeek1/2024_MadCamp_Week1/assets/110375619/8750cefc-628
 
 <br/>
 
-**Beta Version APK Link**
+## Beta Version APK Link
 
 https://drive.google.com/file/d/1igHAqAzlZj6PE3_LkDajVQpFUzPLzXeO/view?usp=sharing
