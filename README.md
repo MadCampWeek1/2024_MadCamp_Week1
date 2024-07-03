@@ -3,7 +3,7 @@
 
 <br/>
 # SnapGeul
-![snapgeul2](https://github.com/MadCampWeek1/2024_MadCamp_Week1/assets/110375619/577f65e1-dc1b-4ee6-a77b-a548f0485c7f)
+img src="https://github.com/MadCampWeek1/2024_MadCamp_Week1/assets/110375619/577f65e1-dc1b-4ee6-a77b-a548f0485c7f" width="250"></img> &emsp; <img src="https://github.com/MadCampWeek1/2024_MadCamp_Week1/assets/110375619/577f65e1-dc1b-4ee6-a77b-a548f0485c7f" width="250"></img>
 
 **SnapGeul**은 연락처에 저장되어 있는 사람들과 함께 짧은 글, GEUL을 공유할 수 있는 앱입니다.
 
