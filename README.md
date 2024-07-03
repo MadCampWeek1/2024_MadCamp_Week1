@@ -15,7 +15,7 @@
 릴스나 쇼츠 형식으로 스냅글을 즐겨보세요 :)
 
 <br/>
-## Team
+##Team
 **최정민** <a href="https://github.com/madcampnewbie"><img src="https://img.shields.io/badge/GitHub-181717?style=flat-square&logo=github&logoColor=white"></a>
 **홍바다** <a href="https://github.com/BadaHong"><img src="https://img.shields.io/badge/GitHub-181717?style=flat-square&logo=github&logoColor=white"></a>
 
